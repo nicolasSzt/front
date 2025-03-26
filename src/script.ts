@@ -1,26 +1,35 @@
-class Veiculo {
-    marca: string
-    color: string
-    distancia_recorrida:number
+class Vehicle {
+    private marca: string;
+    private color: string;
+    private distanciaRecorrida: number;
 
     constructor(
         marca: string,
         color: string,
-        distancia_recorrida: number
+        distanciaRecorrida: number
     ) {
         this.marca = marca;
         this.color = color;
-        this.distancia_recorrida = distancia_recorrida;
+        this.distanciaRecorrida = distanciaRecorrida;
     }
 
-    aumentarDistancia(distancia: number) {
-        this.distancia_recorrida = this.distancia_recorrida += distancia
-        console.log(autoRojo);
+    increaseDistance(distancia: number): void {
+
+        if (distancia <= 0) {
+            console.log("La distancia debe ser mayor a 0.");
+        }
+
+        this.distanciaRecorrida += distancia;
+        console.log(`Nueva distancia recorrida: ${this.distanciaRecorrida} km`);
     }
 
+    veicleInformation(): string {
+        return `Vehiculo: ${this.marca} color: ${this.color}, Distancia: ${this.distanciaRecorrida} km`;
+    }
 }
 
-const autoRojo = new Veiculo("Ferrari", "Rojo", 10000)
+const autoRojo = new Vehicle("Ferrari", "Rojo", 10000);
 
-autoRojo.aumentarDistancia(90)
+console.log(`informacion veicular: ${autoRojo.veicleInformation()}`);
 
+autoRojo.increaseDistance(100);
