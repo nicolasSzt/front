@@ -5,17 +5,17 @@ export class ActionLogIn extends Action {
 
     constructor(
         sourceDevice: string,
-        datecreated: string,
+        created_at: string,
         verbDescription: string
     ) {
-        super(verbDescription, datecreated)
+        super(verbDescription, created_at)
         this.sourceDevice = sourceDevice;
     }
 
     showAction(): void {
         console.log(`
             La accion con id: ${this.getActionId()}
-            se hizo en ${this.datecreated} y fue ${this.verbDescription}
+            se hizo en ${this.created_at} y fue ${this.verbDescription}
             desde ${this.sourceDevice}
         `);
     }

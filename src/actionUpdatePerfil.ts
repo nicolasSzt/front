@@ -5,18 +5,17 @@ export class ActionUpdatePerfil extends Action {
     private changes: Change[] = [];
 
     constructor(dateCreated: string, verbDescription: string) {
-        super(verbDescription, dateCreated)
+        super(verbDescription, dateCreated);
+    }
+
+    addChange(change: Change): void {
+        this.changes.push(change);
+        console.log("Nuevo cambio agregado:");
+        change.showChanges();
     }
 
     showAction(): void {
-        console.log(`
-            La accion con id: ${this.getActionId()}
-            se hizo el dia ${this.datecreated} y fue ${this.verbDescription}
-            los cambios en el perfil fueron: ${this.changes}
-            `);
-
-        this.changes.forEach(change => {
-            change.showChanges();
-        });
+        console.log("Cambios realizados:");
+        this.changes.forEach(change => change.showChanges());
     }
 }

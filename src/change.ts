@@ -14,6 +14,7 @@ export class Change {
     }
 
     showChanges(): void {
-        console.log(`La accion con id: ${this.changeId} valor anterior: ${this.newChange} y fue ${this.preventDefault}`)
+        console.log(`ID del cambio: ${this.changeId}`);
+        console.log(`Cambio realizado: ${this.preventDefault} a ${this.newChange}`);
     }
 }
