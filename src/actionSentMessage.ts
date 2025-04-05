@@ -4,8 +4,8 @@ export class ActionMessage extends Action {
     private receiver: string = "";
     private message: string = "";
 
-    constructor(receiver: string, message: string, created_at: string) {
-        super(receiver, created_at);
+    constructor(description: string, message: string, created_at: string,receiver: string) {
+        super(description, created_at);
         this.receiver = receiver;
         this.message = message;
     }

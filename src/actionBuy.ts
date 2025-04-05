@@ -4,9 +4,8 @@ export class ActionBuy extends Action {
     private products: string[] = [];
     private total: number = 0;
 
-    constructor(product: string, total: number, created_at: string) {
-        super(product,created_at);
-        this.products.push(product);
+    constructor(description: string, total: number, created_at: string) {
+        super(description,created_at);
         this.total = total;
     }
 
@@ -17,7 +16,7 @@ export class ActionBuy extends Action {
     showAction(): void {
         console.log(`
             La accion con id: ${this.getActionId()}
-            se hizo el dia ${this.created_at} y se compro ${this.products}
+            se hizo el dia ${this.created_at} y ${this.products}
             con un total de: ${this.total}
         `);
     }

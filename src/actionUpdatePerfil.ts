@@ -4,8 +4,8 @@ import { Change } from "./change";
 export class ActionUpdatePerfil extends Action {
     private changes: Change[] = [];
 
-    constructor(dateCreated: string, verbDescription: string) {
-        super(verbDescription, dateCreated);
+    constructor(dateCreated: string, description: string) {
+        super(description, dateCreated);
     }
 
     addChange(change: Change): void {
