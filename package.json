@@ -4,7 +4,10 @@
   "main": "./app.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "ts:check": "tsc --noEmit",
+    "check": "npm run lint:fix && npm run ts:check"
   },
   "type": "module",
   "license": "ISC",
@@ -18,5 +21,10 @@
     "nodemon": "^3.1.10"
   },
   "author": "",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "eslint": "^9.26.0",
+    "globals": "^16.1.0"
+  }
 }

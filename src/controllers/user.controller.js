@@ -69,10 +69,7 @@ class UserController {
         return;
       }
 
-      const content = jwt.verify(
-        verificationToken,
-        ENVIRONMENT.JWT_SECRET_KEY
-      );
+      const content = jwt.verify(verificationToken, ENVIRONMENT.JWT_SECRET_KEY);
 
       console.log(content);
       await userRepository.verifyUserEmail({ email: content.email });
@@ -106,7 +103,7 @@ class UserController {
       if (user) {
         throw { status: 400, message: "Usuario no encontrado" };
       }
-      
+
       if (!user.verified) {
         throw { status: 400, message: "Usuario no encontrado" };
       }
@@ -124,6 +121,7 @@ class UserController {
         },
         ENVIRONMENT.JWT_SECRET_KEY
       );
+
       response.send({
         ok: true,
         status: 200,
@@ -131,11 +129,6 @@ class UserController {
         data: {
           authorization_token: authorization_token,
         },
-      });
-      response.send({
-        ok: true,
-        status: 200,
-        message: a,
       });
     } catch (error) {
       if (error.status) {

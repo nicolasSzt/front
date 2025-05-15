@@ -1,5 +1,5 @@
 import { connectDB } from "./config/db.config.js";
-import express, { response } from "express";
+import express from "express";
 import { ENVIRONMENT } from "../enviroment.js";
 import productsRouter from "./routes/product.routes.js";
 import transporter from "./config/mail.config.js";
@@ -10,11 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (request, response) => {
-  if (true) {
-    response.send("<h1>Hola soy una respuesta de express</h1>");
-  } else {
-    response.send("<h1>Ups hubo un error</h1>");
-  }
+  response.send("<h1>Hola soy una respuesta de express</h1>");
 });
 
 // const products = [
@@ -60,7 +56,6 @@ export const sendVerificationEmail = async ({ email, name, redirectUrl }) => {
 };
 
 app.use("/api/products", productsRouter);
-app.use("/api/users", userRouter);
 app.use("/api/users", userRouter);
 
 app.listen(ENVIRONMENT.PORT, () => {

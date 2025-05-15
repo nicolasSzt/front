@@ -19,12 +19,11 @@ class UserRepository {
   async verifyUserEmail({ email }) {
     const user = await this.findByEmail({ email });
 
-
     if (user.verified) {
       throw { message: "usuario ya validado" };
     } else {
       const result = await User.findByIdAndUpdate(
-        userFound.id,
+        user.id,
         {
           $set: {
             verified: true,

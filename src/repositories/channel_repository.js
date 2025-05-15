@@ -17,7 +17,6 @@ class ChannelRepository {
       throw error;
     }
     
-    await channel.save();
     console.log("channel creado exitosamente!");
   }
 }
