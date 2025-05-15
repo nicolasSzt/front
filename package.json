@@ -1,7 +1,6 @@
 {
   "name": "clase-11-mongoose",
   "version": "1.0.0",
-  "description": "",
   "main": "./app.js",
   "scripts": {
     "start": "node ./src/app.js",
@@ -17,5 +16,7 @@
     "mongoose": "^8.13.2",
     "nodemailer": "^7.0.3",
     "nodemon": "^3.1.10"
-  }
+  },
+  "author": "",
+  "description": ""
 }
