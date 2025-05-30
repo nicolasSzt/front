@@ -29,6 +29,7 @@ export const loginAuth = async ({ email, password }) => {
         }
     }
 }
+
 export const registerAuth = async ({ email, password }) => {
     try {
         const res = await fetch(

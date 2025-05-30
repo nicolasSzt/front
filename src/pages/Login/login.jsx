@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LOCALSTORAGE_KEYS from '../../constans/localStorage.js';
-import useForm from '../../hook/useForm';
+import useForm from '../../hook/useForm.jsx';
 import { LOGIN_FIELD_NAME } from '../../constans/form/login.js';
 
 const LoginPage = () => {
