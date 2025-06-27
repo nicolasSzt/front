@@ -1,19 +1,29 @@
-import { Route, Routes } from "react-router-dom";
-import Login from "./pages/login/Login";
-import Home from "./pages/home/Home";
-import Register from "./pages/register/Register";
+import AppRoutes from '@/routes/routes';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
+
+const queryClient = new QueryClient();
+
+const theme = createTheme({
+  palette: {
+    background: {
+      default: '#f8fafc',
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+});
 
 const App = () => {
-    return (
-        <div>
-            <Routes>
-                <Route path='/' element={<Login />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/register' element={<Register />} />
-                <Route path='/home' element={<Home />} />
-            </Routes>
-        </div>
-    )
-}
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppRoutes />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

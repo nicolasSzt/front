@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { registerAuth } from "../../services/authServices";
 import { REGISTER_FIELD_NAME } from "../../constans/form/register";
-import useForm from "../../hook/useForm";
+import useForm from "../../hooks/useForm";
 
 const Register = () => {
     const [error, setError] = useState('');

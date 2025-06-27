@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LOCALSTORAGE_KEYS from '../../constans/localStorage.js';
-import useForm from '../../hook/useForm.jsx';
+import useForm from '../../hooks/useForm.jsx';
 import { LOGIN_FIELD_NAME } from '../../constans/form/login.js';
 import { loginAuth } from '../../services/authServices.js';
 
@@ -23,7 +23,8 @@ const Login = () => {
                     LOCALSTORAGE_KEYS.AUTHORIZATION_TOKEN,
                     res.data.authorization_token
                 )
-                navigate('/home')
+                console.log('res', res.data.authorization_token)
+                navigate('/workspacesSelector')
             }
             else {
                 setError(res.message)
