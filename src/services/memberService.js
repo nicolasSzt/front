@@ -16,8 +16,9 @@ export const getAllMemberInformation = async (workspace_id) => {
   console.log("Fetching member information...");
   try {
     const response = await kyClient().get(`members/${workspace_id}`).json();
-    console.log("Member information fetched successfully:", response.data);
-    return { members: response.data }; // envolver en objeto con 'members'
+    return {
+      members: response.data, // Envolvemos en 'members'
+    };
   } catch (error) {
     console.error("Error fetching member info:", error);
     throw error;

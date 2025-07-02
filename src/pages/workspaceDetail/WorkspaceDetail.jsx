@@ -59,7 +59,7 @@ const MainContent = styled(Box)`
 `;
 
 
-const WorkspaceDetail = () => {
+export const WorkspaceDetail = () => {
   const { workspace_id } = useParams();
   const { workspaces } = useWorkspacesWithChannels();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -143,4 +143,3 @@ const WorkspaceDetail = () => {
   );
 };
 
-export default WorkspaceDetail;

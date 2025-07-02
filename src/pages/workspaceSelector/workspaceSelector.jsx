@@ -7,7 +7,7 @@ import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSe
 import { useUserInformation } from "@/hooks/useUserInformation";
 import useMemberInformation from "@/hooks/useMemerInformation";
 
-const WorkspaceSelector = () => {
+export const WorkspaceSelector = () => {
     const {
         selectedWorkspace,
         handleWorkspaceSelect,
@@ -99,5 +99,4 @@ const WorkspaceSelector = () => {
     );
 };
 
-export default WorkspaceSelector;
 

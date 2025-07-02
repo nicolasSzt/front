@@ -1,6 +1,6 @@
-import AuthForm from "@/pages/authForm/authForm";
-import WorkspaceDetail from "@/pages/workspaceDetail/workspaceDetail";
-import WorkspaceSelector from "@/pages/workspaceSelector/workspaceSelector";
+import { AuthForm } from "@/pages/authForm/authForm";
+import { WorkspaceDetail } from "@/pages/workspaceDetail/workspaceDetail";
+import { WorkspaceSelector } from "@/pages/workspaceSelector/workspaceSelector";
 
 const routes = [
   {
