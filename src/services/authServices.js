@@ -1,60 +1,57 @@
-import ENVIRONMENT from "../constans/environment"
-import methods_HTTP from "../constans/methods"
+import ENVIRONMENT from "@/constans/environment";
+import LOCALSTORAGE_KEYS from "@/constans/localStorage";
+import ky from "ky";
 
+const kyClient = () => {
+  const token = localStorage.getItem(LOCALSTORAGE_KEYS.AUTHORIZATION_TOKEN);
+  return ky.create({
+    prefixUrl: `${ENVIRONMENT.URL_API}/api`,
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+};
 
 export const loginAuth = async ({ email, password }) => {
-    try {
-        const res = await fetch(
-            `${ENVIRONMENT.URL_API}/api/users/login`,
-            {
-                method: methods_HTTP.POST,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {
-                        email: email,
-                        password: password
-                    }
-                )
-            }
-        )
-        const data = await res.json()
-        return data
-    }
-    catch(error){
-        console.error(error)
-        throw {
-            message: 'Ocurrio un error al comunicarnos con el servidor (intentalo mas tarde)' 
-        }
-    }
-}
+  try {
+    const response = await kyClient()
+      .post("users/login", {
+        json: { email, password },
+      })
+      .json();
 
-export const registerAuth = async ({ email, password, name }) => {
-    try {
-        const res = await fetch(
-            `${ENVIRONMENT.URL_API}/api/users/register`,
-            {
-                method: methods_HTTP.POST,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {
-                        name: name,
-                        email: email,
-                        password: password
-                    }
-                )
-            }
-        )
-        const data = await res.json()
-        return data
+    const token = response.data.authorization_token;
+
+    if (token) {
+      localStorage.setItem(LOCALSTORAGE_KEYS.AUTHORIZATION_TOKEN, token);
     }
-    catch(error){
-        console.error(error)
-        throw {
-            message: 'Ocurrio un error al comunicarnos con el servidor (intentalo mas tarde)' 
-        }
-    }
-}
+
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw {
+      message:
+        error.message ||
+        "Ocurrió un error al comunicarnos con el servidor (inténtalo más tarde)",
+    };
+  }
+};
+
+export const registerAuth = async ({ name, email, password }) => {
+  try {
+    const response = await kyClient()
+      .post("users/register", {
+        json: { name, email, password },
+      })
+      .json();
+
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw {
+      message:
+        error.message ||
+        "Ocurrió un error al comunicarnos con el servidor (inténtalo más tarde)",
+    };
+  }
+};

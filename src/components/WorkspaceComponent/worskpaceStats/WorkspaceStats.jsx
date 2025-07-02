@@ -13,11 +13,25 @@ const StatItemComponent = ({ icon, value, label }) => (
   </StatItem>
 );
 
-const WorkspaceStats = ({ members, channels, membersLabel, channelsLabel }) => {
+const WorkspaceStats = (
+  {
+    members,
+    channels,
+    membersLabel,
+    channelsLabel
+  }) => {
   return (
     <StatsContainer>
-      <StatItemComponent icon="👥" value={members} label={membersLabel} />
-      <StatItemComponent icon="💬" value={channels} label={channelsLabel} />
+      <StatItemComponent
+        icon="👥"
+        value={members}
+        label={membersLabel}
+      />
+      <StatItemComponent
+        icon="💬"
+        value={channels}
+        label={channelsLabel}
+      />
     </StatsContainer>
   );
 };

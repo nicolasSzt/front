@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import {
   Box,
@@ -9,13 +9,16 @@ import {
   CircularProgress,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useQuery } from "@tanstack/react-query";
-import { getAllChannelsByWorkspace } from "@/services/workspaceService/workspaceService";
-import Sidebar from "@/components/Sidebar/sidebar";
 import { useParams } from "react-router-dom";
 
-// Styled Components
+import Sidebar from "@/components/sidebar";
+import { useWorkspaceChannels } from "@/hooks/useWorkspaceChannels";
+import useWorkspacesWithChannels from "@/hooks/useWorkspaceWithChannels";
+import Chat from "@/components/ChatArea";
+
+
 const MainContainer = styled(Box)`display: flex;`;
+
 const LoadingContainer = styled(Box)`
   display: flex;
   justify-content: center;
@@ -23,67 +26,67 @@ const LoadingContainer = styled(Box)`
   height: 100vh;
   flex-direction: column;
 `;
+
 const ErrorContainer = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 `;
+
 const MobileAppBar = styled(AppBar)`
   display: block;
+  background-color: white;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #ffffff;
   z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+
   @media (min-width: 900px) {
     display: none;
   }
 `;
+
 const MainContent = styled(Box)`
   flex-grow: 1;
   padding: ${({ theme }) => theme.spacing(3)};
   margin-top: 64px;
   background-color: ${({ theme }) => theme.palette.background.default};
   min-height: 100vh;
+  
   @media (min-width: 900px) {
     margin-top: 0;
   }
 `;
-const ChatArea = styled(Box)`
-  margin-top: ${({ theme }) => theme.spacing(4)};
-  padding: ${({ theme }) => theme.spacing(3)};
-  background-color: ${({ theme }) => theme.palette.background.paper};
-  border-radius: ${({ theme }) => theme.spacing(2)};
-  box-shadow: ${({ theme }) => theme.shadows[1]};
-`;
-const LoadingText = styled(Typography)`
-  margin-top: ${({ theme }) => theme.spacing(2)};
-`;
+
 
 const WorkspaceDetail = () => {
   const { workspace_id } = useParams();
-
+  const { workspaces } = useWorkspacesWithChannels();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedChannel, setSelectedChannel] = useState(null);
 
-  const { data: channels, isLoading, isError, error } = useQuery({
-    queryKey: ["channels", workspace_id],
-    queryFn: () => getAllChannelsByWorkspace(workspace_id),
-    enabled: !!workspace_id,
-    refetchOnWindowFocus: false,
-  });
+  const {
+    channels,
+    selectedChannel,
+    handleChannelSelect,
+    isLoading,
+    isError,
+    error,
+  } = useWorkspaceChannels(workspace_id);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  const currentWorkspace = workspaces.find(
+    (workspace) => workspace._id === workspace_id
+  );
 
-  const handleChannelSelect = (channelId) => {
-    setSelectedChannel(channelId);
-    console.log("Selected channel:", channelId);
-  };
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   if (isLoading) {
     return (
       <LoadingContainer>
         <CircularProgress />
-        <LoadingText variant="body1">Cargando canales...</LoadingText>
+        <Typography variant="body1" mt={2}>
+          Cargando canales...
+        </Typography>
       </LoadingContainer>
     );
   }
@@ -104,13 +107,13 @@ const WorkspaceDetail = () => {
         <Toolbar>
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="abrir menú"
             edge="start"
             onClick={handleDrawerToggle}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap>
             {selectedChannel ? `#${selectedChannel}` : "Selecciona un canal"}
           </Typography>
         </Toolbar>
@@ -120,31 +123,23 @@ const WorkspaceDetail = () => {
         selectedChannel={selectedChannel}
         onChannelSelect={handleChannelSelect}
         mobileOpen={mobileOpen}
+        currentWorkspace={currentWorkspace}
         onMobileToggle={handleDrawerToggle}
-        channels={channels} 
-        workspaceId={workspace_id} 
+        channels={channels}
+        workspaceId={workspace_id}
       />
 
-      <MainContent component="main">
-        <Typography variant="h4" gutterBottom>
-          {selectedChannel ? `Canal: #${selectedChannel}` : "Selecciona un canal"}
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Workspace actual: {workspace_id}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Aquí iría el contenido del chat para el canal seleccionado.
-        </Typography>
-
-        <ChatArea>
-          <Typography variant="h6" gutterBottom>
-            Área de Chat
+      <MainContent>
+        {selectedChannel ? (
+          <Chat
+            workspaceId={workspace_id}
+            channelId={selectedChannel}
+          />
+        ) : (
+          <Typography variant="h5" color="text.secondary">
+            Selecciona un canal para comenzar a chatear
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Esta es el área principal donde aparecerían los mensajes del canal{" "}
-            {selectedChannel || "ninguno seleccionado"}.
-          </Typography>
-        </ChatArea>
+        )}
       </MainContent>
     </MainContainer>
   );

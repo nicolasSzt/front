@@ -1,3 +1,4 @@
+import { WorkspaceTitle } from "@/components/styled/Typography";
 import ENVIRONMENT from "@/constans/environment";
 import LOCALSTORAGE_KEYS from "@/constans/localStorage";
 import ky from "ky";
@@ -5,7 +6,7 @@ import ky from "ky";
 const kyClient = () => {
   const token = localStorage.getItem(LOCALSTORAGE_KEYS.AUTHORIZATION_TOKEN);
   return ky.create({
-    prefixUrl: `${ENVIRONMENT.URL_API}/api`,
+    prefixUrl: `${ENVIRONMENT.URL_API}/api/`,
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -26,30 +27,25 @@ export const getAllWorkspaces = async () => {
 };
 export const getAllChannelsByWorkspace = async (workspaceId) => {
   try {
-    console.log("Fetching channels for workspace:", workspaceId);
-
     const response = await kyClient().get(`channels/${workspaceId}`).json();
-    console.log("Fetched channels:", response.data.channels);
-
     return response.data.channels;
   } catch (error) {
-    console.error("Error fetching channels", error);
     throw error;
   }
 };
 
-export const createWorkspace = async (workspace) => {
-  const { title, description } = workspace;
+export const createWorkspace = async (title, description) => {
   try {
-    const data = await kyClient
+    const data = await kyClient()
       .post("workspaces", {
         json: {
-          name: title,
+          title: title,
           description: description,
         },
       })
       .json();
-    return data;
+      return data;
+  
   } catch (error) {
     console.error(error);
     throw error;

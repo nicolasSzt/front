@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 
-export const MainTitle = styled.h1`
-  font-size: 2.5rem;
+export const MainTitle = styled.h3`
   font-weight: bold;
   color: #1a202c;
   margin-bottom: 16px;
@@ -12,7 +11,7 @@ export const MainTitle = styled.h1`
   }
 `;
 
-export const Subtitle = styled.p`
+export const Subtitle = styled.h2`
   font-size: 1.25rem;
   color: #718096;
   text-align: center;

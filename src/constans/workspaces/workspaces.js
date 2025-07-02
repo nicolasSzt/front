@@ -50,13 +50,13 @@ export const WORKSPACE_DATA = [
 export const WORKSPACE_SELECTOR_TEXTS = {
   title: "Choose your workspace",
   subtitle: "Select a workspace to continue or create a new one to get started with your team collaboration.",
-  createNew: "Create new workspace",
+  createNew: "Crear nuevo espacio de trabajo",
   createNewDescription:
-    "Start fresh with a new workspace for your team or project. Invite members and set up channels.",
-  createButton: "Create Workspace",
-  helpText: "Need help?",
-  contactSupport: "Contact support",
-  membersLabel: "members",
-  channelsLabel: "channels",
-  activeLabel: "Active",
+    "Comienza desde cero con un nuevo espacio de trabajo para tu equipo o proyecto. Invita a miembros y configura canales.",
+  createButton: "Crear Workspace",
+  helpText: "¿Necesitas ayuda?",
+  contactSupport: "Contactar soporte",
+  membersLabel: "miembros",
+  channelsLabel: "canales",
+  activeLabel: "Activo",
 }

@@ -1,14 +1,13 @@
-import Login from "@/pages/login/Login";
-import Register from "@/pages/register/Register";
-import WorkspaceSelector from "@/pages/workspaceSelector/workspaceSelector";
 import WorkspaceDetail from "@/pages/workspaceDetail/WorkspaceDetail";
+import AuthForm from "@/pages/authForm/authForm";
+import WorkspaceSelector from "@/pages/workspaceSelector/WorkspaceSelector";
 
 const routes = [
   {
     path: "/",
-    element: Login,
+    element: AuthForm,
   },
-    {
+  {
     path: "/workspacesSelector",
     element: WorkspaceSelector,
   },
@@ -18,11 +17,7 @@ const routes = [
   },
   {
     path: "/login",
-    element: Login,
-  },
-  {
-    path: "/register",
-    element: Register,
+    element: AuthForm,
   },
 ];
 

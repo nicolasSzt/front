@@ -6,13 +6,19 @@ import { StatusBadge } from "@/components/styled/Badge"
 import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces"
 import WorkspaceStats from "../worskpaceStats/WorkspaceStats"
 
-const WorkspaceCard = ({ workspace, isSelected, onSelect }) => {
+const WorkspaceCard = (
+  {
+    workspace,
+    isSelected,
+    onSelect,
+    channelsCount
+  }
+) => {
   const {
     id,
     title,
     description,
     members,
-    channels,
     isActive
   } = workspace
 
@@ -40,7 +46,7 @@ const WorkspaceCard = ({ workspace, isSelected, onSelect }) => {
 
         <WorkspaceStats
           members={members}
-          channels={channels}
+          channels={channelsCount}
           membersLabel={WORKSPACE_SELECTOR_TEXTS.membersLabel}
           channelsLabel={WORKSPACE_SELECTOR_TEXTS.channelsLabel}
         />

@@ -1,7 +1,12 @@
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "@emotion/styled";
+import { Box } from "@mui/material";
 
-export const StyledCard = styled.div`
+export const StyledCard = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isSelected" && isPropValid(prop),
+})`
   background: #ffffff;
+  width: 100%;
   border-radius: 12px;
   border: 2px solid ${(props) => (props.isSelected ? "#1976d2" : "#edf2f7")};
   cursor: pointer;
@@ -18,15 +23,14 @@ export const StyledCard = styled.div`
   }
 `;
 
-export const CardContent = styled.div`
+export const CardContent = styled(Box)`
   padding: 24px;
 `;
 
-export const CreateWorkspaceCard = styled.div`
+export const CreateWorkspaceCard = styled(Box)`
   background: #ffffff;
   border-radius: 12px;
   border: 2px dashed #e2e8f0;
-  cursor: pointer;
   transition: border-color 0.2s ease-in-out;
 
   &:hover {
@@ -34,7 +38,7 @@ export const CreateWorkspaceCard = styled.div`
   }
 `;
 
-export const CreateWorkspaceContent = styled.div`
+export const CreateWorkspaceContent = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;

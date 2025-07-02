@@ -1,0 +1,10 @@
+import { Box, styled } from "@mui/material";
+
+const FormContainer = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+`;
+
+export default FormContainer;
