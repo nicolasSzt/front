@@ -35,7 +35,7 @@ const StyledButton = styled(Button)`
   margin-top: 16px;
   padding-top: 12px;
   padding-bottom: 12px;
-  border-radius: 16px;
+  border-radius: 7px;
   text-transform: none;
   font-weight: 600;
   width: 100%;
@@ -45,7 +45,7 @@ const StyledFormCard = styled(FormCard)`
   width: 100%;
   max-width: 500px;
   padding: 16px;
-  border-radius: 32px;
+  border-radius: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   background-color: white;
 
