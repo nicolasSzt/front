@@ -1,4 +1,4 @@
-import AuthForm from "@/pages/authForm/AuthForm";
+import AuthForm from "@/pages/authForm/authForm";
 import WorkspaceDetail from "@/pages/workspaceDetail/workspaceDetail";
 import WorkspaceSelector from "@/pages/workspaceSelector/workspaceSelector";
 
