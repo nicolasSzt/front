@@ -15,7 +15,6 @@ import { REGISTER_FIELD_NAME } from "@/constans/form/register";
 import { loginAuth, registerAuth } from "@/services/authServices";
 import styled from "@emotion/styled";
 
-// 🔧 Estado inicial
 const initialFormState = {
     [REGISTER_FIELD_NAME.NAME]: "",
     [REGISTER_FIELD_NAME.EMAIL]: "",
@@ -132,7 +131,7 @@ const AuthForm = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e?.preventDefault();
         if (uiState.isLogin) {
             await handleLogin();
         } else {
@@ -166,8 +165,8 @@ const AuthForm = () => {
     };
 
     const getButtonText = () => {
-        if (setUi.loading) return setUi.isLogin ? "Iniciando..." : "Creando...";
-        return setUi.isLogin ? "Iniciar sesión" : "Crear cuenta";
+        if (uiState.loading) return uiState.isLogin ? "Iniciando..." : "Creando...";
+        return uiState.isLogin ? "Iniciar sesión" : "Registrarse";
     };
 
     return (
@@ -186,7 +185,7 @@ const AuthForm = () => {
 
                     <FormContainer
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={(e) => handleSubmit(e)}
                         autoComplete="off"
                     >
                         <AuthFormFields
@@ -208,7 +207,6 @@ const AuthForm = () => {
                             fullWidth
                             disabled={uiState.loading}
                             variant="contained"
-
                         >
                             {getButtonText()}
                         </StyledButton>

@@ -29,17 +29,16 @@ const CenteredContainer = styled(Box)`
   height: 100vh;
 `;
 
-export const WorkspacesContainer = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  gap: ${({ theme }) => theme.spacing(3)};
-  width: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing(4)};
-  height: 100%;
 
-  @media (max-width: 660px) {
-    flex-direction: column;
-  }
+
+const CardsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
+  gap: 16px;
+  margin-bottom: 32px;
+  @media (max-width: 600px) {
+display: flex;
+    flex-direction: column; /* Cambia a una sola columna en pantallas pequeñas */}
 `;
 
 const DialogContentStyled = styled(DialogContent)`
@@ -87,7 +86,7 @@ const WorkspaceSelectorLayout = ({
                 <ContentContainer>
                     <WorkspaceHeader title={texts.title} />
 
-                    <WorkspacesContainer>
+                    <CardsContainer>
                         {workspaces.map((workspace) => (
                             <WorkspaceCard
                                 key={workspace._id}
@@ -99,7 +98,7 @@ const WorkspaceSelectorLayout = ({
                                 channelsCount={workspace.channelsCount}
                             />
                         ))}
-                    </WorkspacesContainer>
+                    </CardsContainer>
 
                     <CreateWorkspaceCardComponent
                         onCreateWorkspace={dialog.openDialog}

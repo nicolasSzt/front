@@ -70,7 +70,7 @@ const WorkspaceSelector = () => {
     const handleSubmitWorkspace = (e) => {
         e.preventDefault();
         if (!titleError && form_state.title.trim()) {
-            handleSubmit();
+            handleSubmit(e);
         }
     };
 

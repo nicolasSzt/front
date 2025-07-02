@@ -1,27 +1,24 @@
-# Slack - React + Vite + TypeScript
+# Slack - React + Vite 
 
-Proyecto privado basado en React con Vite, usando TypeScript y algunas librerías populares para UI y manejo de datos.
-
----
+## Proyecto privado construido con React y Vite, que integra librerías populares para la interfaz de usuario y la gestión eficiente de datos.
 
 ## Tecnologías
 
-- React 18  
-- Vite  
-- TypeScript  
-- @mui/material + @mui/icons-material  
-- @emotion/react + @emotion/styled  
-- React Query (@tanstack/react-query)  
-- ky (cliente HTTP)  
-- react-router-dom (rutas)  
-- ESLint para linting  
+- React 18
+- Vite
+- @mui/material + @mui/icons-material
+- @emotion/react + @emotion/styled
+- React Query (@tanstack/react-query)
+- ky (cliente HTTP)
+- react-router-dom (rutas)
+- ESLint para linting
 
 ---
 
 ## Requisitos
 
-- Node.js (recomendado usar [nvm](https://github.com/nvm-sh/nvm))  
-- pnpm (gestor de paquetes)  
+- Node.js (recomendado usar [nvm](https://github.com/nvm-sh/nvm))
+- pnpm (gestor de paquetes)
 
 ---
 
@@ -39,6 +36,7 @@ cd front
 # Instalar dependencias
 pnpm install
 
-# Levantar servidor de desarrollo 
+# Levantar servidor de desarrollo
 pnpm run dev
 pnpm dev
+```

@@ -64,7 +64,6 @@ const WorkspaceDetail = () => {
   const { workspace_id } = useParams();
   const { workspaces } = useWorkspacesWithChannels();
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const {
     channels,
     selectedChannel,
@@ -126,7 +125,7 @@ const WorkspaceDetail = () => {
         currentWorkspace={currentWorkspace}
         onMobileToggle={handleDrawerToggle}
         channels={channels}
-        workspaceId={workspace_id}
+        workspace_id={workspace_id}
       />
 
       <MainContent>
