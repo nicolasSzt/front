@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useWorkspaceSelector } from "@/hooks/useWorkspaceSelector";
 import { useWorkspacesWithChannels } from "@/hooks/useWorkspaceWithChannels";
 import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces";
-import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSelectorLayout/WorkspaceLayaout";
 import useForm from "@/hooks/useForm";
+import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSelectorLayout/WorkspaceLayaout";
+import { useUserInformation } from "@/hooks/useUserInformation";
+import useMemberInformation from "@/hooks/useMemerInformation";
 
 const WorkspaceSelector = () => {
     const {
@@ -12,8 +14,11 @@ const WorkspaceSelector = () => {
         handleCreateWorkspace,
     } = useWorkspaceSelector();
 
-    const { workspaces, isLoading, isError, error } = useWorkspacesWithChannels();
+    const { users } = useUserInformation();
 
+    const { membersByWorkspace } = useMemberInformation();
+    console.log("membersByWorkspace", membersByWorkspace);
+    const { workspaces, isLoading, isError, error } = useWorkspacesWithChannels();
     const [open, setOpen] = useState(false);
     const [titleError, setTitleError] = useState("");
 
@@ -77,6 +82,8 @@ const WorkspaceSelector = () => {
     return (
         <WorkspaceSelectorLayout
             workspaces={workspaces}
+            users={users}
+            members={membersByWorkspace}
             isLoading={isLoading}
             isError={isError}
             error={error}
@@ -84,7 +91,7 @@ const WorkspaceSelector = () => {
             onSelectWorkspace={handleWorkspaceSelect}
             dialog={dialog}
             workspaceForm={form_state}
-            onChangeWorkspaceForm={handleChangeWithValidation} // CORREGIDO
+            onChangeWorkspaceForm={handleChangeWithValidation}
             onSubmitWorkspace={handleSubmitWorkspace}
             titleError={titleError}
             texts={WORKSPACE_SELECTOR_TEXTS}
@@ -93,3 +100,4 @@ const WorkspaceSelector = () => {
 };
 
 export default WorkspaceSelector;
+

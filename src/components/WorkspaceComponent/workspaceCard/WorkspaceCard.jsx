@@ -1,42 +1,35 @@
-import { CardContent, StyledCard } from "@/components/styled/Card"
-import { CardHeader, FlexColumn, FlexRow } from "@/components/styled/Layaout"
-import WorkspaceAvatar from "../workspaceAvatar/WorkspaceAvatar"
-import { WorkspaceDescription, WorkspaceTitle } from "@/components/styled/Typography"
-import { StatusBadge } from "@/components/styled/Badge"
-import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces"
-import WorkspaceStats from "../worskpaceStats/WorkspaceStats"
+import { CardContent, StyledCard } from "@/components/styled/Card";
+import { CardHeader, FlexColumn, FlexRow } from "@/components/styled/Layaout";
+import { WorkspaceDescription, WorkspaceTitle } from "@/components/styled/Typography";
+import { StatusBadge } from "@/components/styled/Badge";
+import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces";
+import WorkspaceStats from "../worskpaceStats/WorkspaceStats";
 
-const WorkspaceCard = (
-  {
-    workspace,
-    isSelected,
-    onSelect,
-    channelsCount
-  }
-) => {
+const WorkspaceCard = ({
+  workspace,
+  membersCount,
+  isSelected,
+  onSelect,
+  channelsCount,
+}) => {
   const {
-    id,
+    _id,
     title,
     description,
-    members,
-    isActive
-  } = workspace
-
-  const handleClick = () => onSelect(id)
-
+    isActive,
+  } = workspace;
+  const handleClick = () => onSelect(_id);
   return (
-    <StyledCard
-      isSelected={isSelected}
-      onClick={handleClick}
-    >
+    <StyledCard isSelected={isSelected} onClick={handleClick}>
       <CardContent>
         <CardHeader>
           <FlexRow>
-            <WorkspaceAvatar workspace={workspace} />
             <FlexColumn>
               <FlexRow gap="8px">
                 <WorkspaceTitle>{title}</WorkspaceTitle>
-                {isActive && <StatusBadge>{WORKSPACE_SELECTOR_TEXTS.activeLabel}</StatusBadge>}
+                {isActive && (
+                  <StatusBadge>{WORKSPACE_SELECTOR_TEXTS.activeLabel}</StatusBadge>
+                )}
               </FlexRow>
               <WorkspaceDescription>{description}</WorkspaceDescription>
             </FlexColumn>
@@ -45,14 +38,14 @@ const WorkspaceCard = (
         </CardHeader>
 
         <WorkspaceStats
-          members={members}
+          membersCount={membersCount}
           channels={channelsCount}
           membersLabel={WORKSPACE_SELECTOR_TEXTS.membersLabel}
           channelsLabel={WORKSPACE_SELECTOR_TEXTS.channelsLabel}
         />
       </CardContent>
     </StyledCard>
-  )
-}
+  );
+};
 
-export default WorkspaceCard
+export default WorkspaceCard;

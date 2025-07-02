@@ -4,6 +4,7 @@ import ky from "ky";
 
 const kyClient = () => {
   const token = localStorage.getItem(LOCALSTORAGE_KEYS.AUTHORIZATION_TOKEN);
+  console.log("Token:", token); 
   return ky.create({
     prefixUrl: `${ENVIRONMENT.URL_API}/api`,
     headers: {

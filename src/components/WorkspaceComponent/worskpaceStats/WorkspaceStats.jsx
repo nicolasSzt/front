@@ -15,7 +15,7 @@ const StatItemComponent = ({ icon, value, label }) => (
 
 const WorkspaceStats = (
   {
-    members,
+    membersCount,
     channels,
     membersLabel,
     channelsLabel
@@ -24,7 +24,7 @@ const WorkspaceStats = (
     <StatsContainer>
       <StatItemComponent
         icon="👥"
-        value={members}
+        value={membersCount}
         label={membersLabel}
       />
       <StatItemComponent

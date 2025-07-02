@@ -4,10 +4,8 @@ import {
     MainContainer,
     ContentContainer,
 } from "@/components/styled/Container";
-import WorkspaceHeader from "../workspaceHeader/WorkspaceHeader";
-import WorkspaceCard from "../workspaceCard/WorkspaceCard";
-import WorkspaceFooter from "../workspaceFooter/WorkspaceFooter";
-import CreateWorkspaceCardComponent from "@/components/createWorkspaceCard/CreateWorkspaceCard";
+import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
+import WorkspaceFooter from "@/components/WorkspaceComponent/workspaceFooter/WorkspaceFooter";
 import {
     CircularProgress,
     Typography,
@@ -20,6 +18,8 @@ import {
     Button,
 } from "@mui/material";
 import GlobalStyles from "@/components/GlobalStyles";
+import CreateWorkspaceCardComponent from "../createWorkspaceCard/CreateWorkspaceCard";
+import WorkspaceCard from "@/components/WorkspaceComponent/workspaceCard/WorkspaceCard";
 
 const CenteredContainer = styled(Box)`
   display: flex;
@@ -29,16 +29,16 @@ const CenteredContainer = styled(Box)`
   height: 100vh;
 `;
 
-
-
 const CardsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
   gap: 16px;
   margin-bottom: 32px;
+
   @media (max-width: 600px) {
-display: flex;
-    flex-direction: column; /* Cambia a una sola columna en pantallas pequeñas */}
+    display: flex;
+    flex-direction: column; /* Cambia a una sola columna en pantallas pequeñas */
+  }
 `;
 
 const DialogContentStyled = styled(DialogContent)`
@@ -54,6 +54,8 @@ const WorkspaceSelectorLayout = ({
     error,
     selectedWorkspace,
     onSelectWorkspace,
+    users,
+    members,
     dialog,
     workspaceForm,
     onChangeWorkspaceForm,
@@ -87,17 +89,21 @@ const WorkspaceSelectorLayout = ({
                     <WorkspaceHeader title={texts.title} />
 
                     <CardsContainer>
-                        {workspaces.map((workspace) => (
-                            <WorkspaceCard
-                                key={workspace._id}
-                                workspace={workspace}
-                                isSelected={selectedWorkspace === workspace._id}
-                                onSelect={() =>
-                                    onSelectWorkspace(workspace._id, workspace.title)
-                                }
-                                channelsCount={workspace.channelsCount}
-                            />
-                        ))}
+                        {workspaces.map((workspace) => {
+                            const membersInfo = members.find(m => m.workspaceId === workspace._id);
+                            const membersCount = membersInfo?.members.length || 0;
+
+                            return (
+                                <WorkspaceCard
+                                    key={workspace._id}
+                                    workspace={workspace}
+                                    membersCount={membersCount}
+                                    channelsCount={workspace.channelsCount}
+                                    isSelected={workspace._id === selectedWorkspace}
+                                    onSelect={onSelectWorkspace}
+                                />
+                            );
+                        })}
                     </CardsContainer>
 
                     <CreateWorkspaceCardComponent
@@ -118,7 +124,8 @@ const WorkspaceSelectorLayout = ({
                 open={dialog.open}
                 onClose={dialog.closeDialog}
                 fullWidth
-                maxWidth="sm">
+                maxWidth="sm"
+            >
                 <DialogTitle>Crear nuevo workspace</DialogTitle>
                 <DialogContentStyled>
                     <TextField
@@ -142,10 +149,7 @@ const WorkspaceSelectorLayout = ({
                     />
                 </DialogContentStyled>
                 <DialogActions>
-                    <Button
-                        onClick={dialog.closeDialog}
-                    >Cancelar
-                    </Button>
+                    <Button onClick={dialog.closeDialog}>Cancelar</Button>
                     <Button
                         onClick={onSubmitWorkspace}
                         disabled={

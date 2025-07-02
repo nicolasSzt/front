@@ -16,7 +16,6 @@ import { useWorkspaceChannels } from "@/hooks/useWorkspaceChannels";
 import useWorkspacesWithChannels from "@/hooks/useWorkspaceWithChannels";
 import Chat from "@/components/ChatArea";
 
-
 const MainContainer = styled(Box)`display: flex;`;
 
 const LoadingContainer = styled(Box)`
