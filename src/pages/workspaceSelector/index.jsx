@@ -6,6 +6,7 @@ import useForm from "@/hooks/useForm";
 import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSelectorLayout/WorkspaceLayaout";
 import { useUserInformation } from "@/hooks/useUserInformation";
 import useMemberInformation from "@/hooks/useMemerInformation";
+import { useNavigate } from "react-router-dom";
 
 export const WorkspaceSelector = () => {
     const {
@@ -15,6 +16,7 @@ export const WorkspaceSelector = () => {
     } = useWorkspaceSelector();
 
     const { users } = useUserInformation();
+    const navigate = useNavigate();
 
     const { membersByWorkspace } = useMemberInformation();
     const { workspaces, isLoading, isError, error } = useWorkspacesWithChannels();
@@ -45,7 +47,7 @@ export const WorkspaceSelector = () => {
             try {
                 await handleCreateWorkspace(form_state.title, form_state.description);
                 dialog.closeDialog();
-                window.location.reload();
+                navigate(0);
             } catch (e) {
                 console.error("Error al crear workspace", e);
             }
