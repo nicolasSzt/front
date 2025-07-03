@@ -4,7 +4,6 @@ import { useWorkspacesWithChannels } from "@/hooks/useWorkspaceWithChannels";
 import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces";
 import useForm from "@/hooks/useForm";
 import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSelectorLayout/WorkspaceLayaout";
-import { useUserInformation } from "@/hooks/useUserInformation";
 import useMemberInformation from "@/hooks/useMemerInformation";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +14,6 @@ export const WorkspaceSelector = () => {
         handleCreateWorkspace,
     } = useWorkspaceSelector();
 
-    const { users } = useUserInformation();
     const navigate = useNavigate();
 
     const { membersByWorkspace } = useMemberInformation();
@@ -44,6 +42,7 @@ export const WorkspaceSelector = () => {
             description: "",
         },
         onSubmit: async () => {
+            console.log("Form submitted with values:", form_state.title, form_state.description);
             try {
                 await handleCreateWorkspace(form_state.title, form_state.description);
                 dialog.closeDialog();
