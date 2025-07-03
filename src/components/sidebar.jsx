@@ -27,7 +27,8 @@ import {
 } from "@mui/icons-material";
 import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
 import { createChannel } from "@/services/channelService";
-import Modal from "@/components/modal"; 
+import Modal from "@/components/modal";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 280;
 
@@ -157,9 +158,9 @@ const ModalTitle = styled.div`
 const Sidebar = ({
   channels = [],
   selectedChannel = null,
-  onChannelSelect = () => {},
+  onChannelSelect = () => { },
   mobileOpen = false,
-  onMobileToggle = () => {},
+  onMobileToggle = () => { },
   currentWorkspace = null,
   workspace_id,
 }) => {
@@ -167,7 +168,7 @@ const Sidebar = ({
   const [searchTerm, setSearchTerm] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
+  const Navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
@@ -203,7 +204,7 @@ const Sidebar = ({
     try {
       await createChannel(newChannelName, newChannelDescription, workspace_id);
       handleCloseModal();
-      window.location.reload();
+      Navigate(0);
     } catch (error) {
       console.error("Error al crear canal", error);
     }
