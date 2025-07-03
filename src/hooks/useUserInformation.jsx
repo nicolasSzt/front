@@ -13,7 +13,6 @@ export const useUserInformation = () => {
     refetchOnWindowFocus: false,
   });
   const users = data?.users || [];
-  console.log("Users fetched:", users); 
   return {
     users, 
     isUserError,

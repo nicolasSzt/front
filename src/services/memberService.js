@@ -13,7 +13,6 @@ const kyClient = () => {
 };
 
 export const getAllMemberInformation = async (workspace_id) => {
-  console.log("Fetching member information...");
   try {
     const response = await kyClient().get(`members/${workspace_id}`).json();
     return {

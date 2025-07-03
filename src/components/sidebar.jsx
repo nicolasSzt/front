@@ -168,7 +168,6 @@ const Sidebar = ({
 }) => {
   const [channelsExpanded, setChannelsExpanded] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-console.log("Sidebar channels:", workspace_id);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -184,7 +183,6 @@ console.log("Sidebar channels:", workspace_id);
   };
 
   const handleCreateChannel = async () => {
-    console.log("Creating channel:", newChannelName, newChannelDescription, workspace_id);
     try {
       await createChannel(newChannelName, newChannelDescription, workspace_id);
       handleCloseModal();

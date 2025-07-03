@@ -99,7 +99,6 @@ const Chat = ({ workspaceId, channelId, currentUserId }) => {
                     messages.map((msg) => {
                         const isOwn = msg.user._id === currentUserId;
                         const MessageComponent = isOwn ? OwnMessage : OtherMessage;
-                        console.log("Mensaje completo:", msg);
                         return (
                             <MessageComponent key={msg._id}>
 

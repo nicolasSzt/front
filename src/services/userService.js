@@ -13,7 +13,6 @@ const kyClient = () => {
 };
 
 export const getAllUserInformation = async () => {
-    console.log("Fetching user information...");
   try {
     const response = await kyClient().get(`users`).json();
     return { users: response.data.users }; // envolver en objeto con 'users'

@@ -17,7 +17,6 @@ export const WorkspaceSelector = () => {
     const { users } = useUserInformation();
 
     const { membersByWorkspace } = useMemberInformation();
-    console.log("membersByWorkspace", membersByWorkspace);
     const { workspaces, isLoading, isError, error } = useWorkspacesWithChannels();
     const [open, setOpen] = useState(false);
     const [titleError, setTitleError] = useState("");
