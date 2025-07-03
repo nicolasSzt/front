@@ -27,6 +27,7 @@ import {
 } from "@mui/icons-material";
 import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
 import Modal from "@/components/modal";
+
 const drawerWidth = 280;
 
 const SidebarContainer = styled(Box)`
@@ -99,16 +100,6 @@ const ListItemIconStyled = styled(ListItemIcon)`
   min-width: 32px;
 `;
 
-const NavBox = styled(Box)`
-  display: ${({ ismobile }) => (ismobile === "true" ? "block" : "none")};
-  flex-shrink: 0;
-
-  @media (min-width: 900px) {
-    width: ${drawerWidth}px;
-    display: ${({ ismobile }) => (ismobile === "true" ? "none" : "block")};
-  }
-`;
-
 const MobileDrawer = styled(Drawer)`
   display: block;
 
@@ -145,22 +136,13 @@ const ModalContent = styled.div`
   padding-top: ${({ theme }) => theme.spacing(1)};
 `;
 
-const ModalTitle = styled.div`
-  padding: ${({ theme }) => theme.spacing(2)};
-  font-weight: 600;
-  font-size: 1.25rem;
-  color: ${({ theme }) => theme.palette.text.primary};
-`;
-
 const Sidebar = ({
   channels = [],
-  setChannels = () => {},
   selectedChannel = null,
   onChannelSelect = () => {},
   mobileOpen = false,
   onMobileToggle = () => {},
   currentWorkspace = null,
-  workspace_id,
   openModal = false,
   onOpenModal = () => {},
   onCloseModal = () => {},
@@ -281,7 +263,7 @@ const Sidebar = ({
                       selected={selectedChannel === channel._id}
                       onClick={() => {
                         onChannelSelect(channel._id);
-                        if (isMobile) onMobileToggle(); // cerrar drawer en móvil al seleccionar canal
+                        if (isMobile) onMobileToggle();
                       }}
                     >
                       <ListItemIconStyled>

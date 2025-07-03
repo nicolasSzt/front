@@ -123,7 +123,7 @@ const WorkspaceDetail = () => {
         workspace_id
       );
       handleCloseModal();
-      navigate(0); // refresca la página o actualiza datos
+      navigate(0);
     } catch (err) {
       console.error("Error al crear canal:", err);
     }
