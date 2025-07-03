@@ -1,9 +1,19 @@
-import { getAllChannelsByWorkspace, getAllWorkspaces } from "@/services/workspaceService";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useState, useCallback } from "react";
+import { useQuery, useQueries, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import {
+  getAllWorkspaces,
+  getAllChannelsByWorkspace,
+  createWorkspace,
+} from "@/services/workspaceService";
 
-export const useWorkspacesWithChannels = () => {
+const useWorkspaceManager = () => {
+  const [selectedWorkspace, setSelectedWorkspace] = useState(null);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const {
-    data: workspacesData,
+    data: workspacesData = [],
     isLoading: loadingWorkspaces,
     isError: errorWorkspaces,
     error: errorWorkspaceMessage,
@@ -13,48 +23,56 @@ export const useWorkspacesWithChannels = () => {
     refetchOnWindowFocus: false,
   });
 
-  const workspaces = workspacesData ?? [];
-  const workspaceIds = workspaces.map((w) => w._id);
+  // Filtrar null o workspace sin _id
+  const validWorkspaces = workspacesData.filter((w) => w && w._id);
+
+  const workspaceIds = validWorkspaces.map((w) => w._id);
 
   const channelsQueries = useQueries({
-    queries: workspaceIds.map((workspaceId) => ({
-      queryKey: ["channels", workspaceId],
-      queryFn: () => getAllChannelsByWorkspace(workspaceId),
+    queries: workspaceIds.map((id) => ({
+      queryKey: ["channels", id],
+      queryFn: () => getAllChannelsByWorkspace(id),
       refetchOnWindowFocus: false,
     })),
   });
 
-  const loadingChannels = channelsQueries.some((q) => q.isLoading);
-  const errorChannels = channelsQueries.some((q) => q.isError);
-  const channelsError = channelsQueries.find((q) => q.isError)?.error;
+  const workspaces = validWorkspaces.map((workspace, i) => {
+    const channelsCount = channelsQueries[i]?.data?.length || 0;
+    return { ...workspace, channelsCount };
+  });
 
-  const workspacesWithChannels = [];
+  const isLoading =
+    loadingWorkspaces || channelsQueries.some((q) => q.isLoading);
+  const isError = errorWorkspaces || channelsQueries.some((q) => q.isError);
+  const error = errorWorkspaceMessage || channelsQueries.find((q) => q.isError)?.error;
 
-  for (let i = 0; i < workspaces.length; i++) {
-    const workspace = workspaces[i];
-    const channelsQuery = channelsQueries[i];
+  const handleWorkspaceSelect = useCallback(
+    (id) => {
+      setSelectedWorkspace(id);
+      navigate(`/workspaceDetail/${id}`);
+    },
+    [navigate]
+  );
 
-    let channelsCount = 0;
-    if (channelsQuery && channelsQuery.data) {
-      channelsCount = channelsQuery.data.length;
-    }
-
-    workspacesWithChannels.push({
-      ...workspace,
-      channelsCount,
-    });
-  }
-
-  const isLoading = loadingWorkspaces || loadingChannels;
-  const isError = errorWorkspaces || errorChannels;
-  const error = errorWorkspaceMessage || channelsError;
+  const handleCreateWorkspace = useCallback(
+    async (title, description) => {
+      const newWorkspace = await createWorkspace(title, description);
+      await queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      setSelectedWorkspace(newWorkspace._id);
+      return newWorkspace;
+    },
+    [queryClient]
+  );
 
   return {
-    workspaces: workspacesWithChannels,
+    workspaces,
     isLoading,
     isError,
     error,
+    selectedWorkspace,
+    handleWorkspaceSelect,
+    handleCreateWorkspace,
   };
 };
 
-export default useWorkspacesWithChannels;
+export default useWorkspaceManager;

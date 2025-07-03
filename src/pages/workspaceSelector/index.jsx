@@ -1,23 +1,25 @@
 import React, { useState } from "react";
-import { useWorkspaceSelector } from "@/hooks/useWorkspaceSelector";
-import { useWorkspacesWithChannels } from "@/hooks/useWorkspaceWithChannels";
 import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces";
 import useForm from "@/hooks/useForm";
 import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSelectorLayout/WorkspaceLayaout";
 import useMemberInformation from "@/hooks/useMemerInformation";
+import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import useWorkspaceManager from "@/hooks/useWorkspaceWithChannels";
 
-export const WorkspaceSelector = () => {
+const WorkspaceSelector = () => {
     const {
+        workspaces,
+        isLoading,
+        isError,
+        error,
         selectedWorkspace,
         handleWorkspaceSelect,
         handleCreateWorkspace,
-    } = useWorkspaceSelector();
-
+    } = useWorkspaceManager();
+    
     const navigate = useNavigate();
-
     const { membersByWorkspace } = useMemberInformation();
-    const { workspaces, isLoading, isError, error } = useWorkspacesWithChannels();
     const [open, setOpen] = useState(false);
     const [titleError, setTitleError] = useState("");
 
@@ -42,11 +44,10 @@ export const WorkspaceSelector = () => {
             description: "",
         },
         onSubmit: async () => {
-            console.log("Form submitted with values:", form_state.title, form_state.description);
             try {
                 await handleCreateWorkspace(form_state.title, form_state.description);
                 dialog.closeDialog();
-                navigate(0);
+                Navigate(0) // o mejor, invalidar cache/react-query
             } catch (e) {
                 console.error("Error al crear workspace", e);
             }
@@ -57,16 +58,14 @@ export const WorkspaceSelector = () => {
         handleChange(e);
 
         if (e.target.name === "title") {
-            const value = e.target.value;
+            const value = e.target.value.trim();
 
-            if (!value.trim()) {
+            if (!value) {
                 setTitleError("");
                 return;
             }
 
-            const exists = workspaces.some(
-                (ws) => ws.title === value
-            );
+            const exists = workspaces.some((ws) => ws.title === value);
 
             setTitleError(exists ? "Ya existe un workspace con este título." : "");
         }
@@ -98,4 +97,4 @@ export const WorkspaceSelector = () => {
     );
 };
 
-
+export default WorkspaceSelector;

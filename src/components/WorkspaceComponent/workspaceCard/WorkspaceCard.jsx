@@ -2,8 +2,8 @@ import { CardContent, StyledCard } from "@/components/styled/Card";
 import { CardHeader, FlexColumn, FlexRow } from "@/components/styled/Layaout";
 import { WorkspaceDescription, WorkspaceTitle } from "@/components/styled/Typography";
 import { StatusBadge } from "@/components/styled/Badge";
-import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces";
 import WorkspaceStats from "../worskpaceStats/WorkspaceStats";
+import { WORKSPACE_SELECTOR_TEXTS } from "@/constans/workspaces/workspaces";
 
 const WorkspaceCard = ({
   workspace,

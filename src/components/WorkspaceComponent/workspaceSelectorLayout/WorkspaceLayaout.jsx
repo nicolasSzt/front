@@ -100,25 +100,39 @@ const WorkspaceSelectorLayout = ({
             <MainContainer>
                 <ContentContainer>
                     <WorkspaceHeader title={texts.title} />
-
                     <CardsContainer>
-                        {workspaces.map((workspace) => {
-                            const membersInfo = members.find(
-                                (m) => m.workspaceId === workspace._id
-                            );
-                            const membersCount = membersInfo?.members.length || 0;
+                        {workspaces.length > 0 ? (
+                            workspaces.map((workspace) => {
+                                const membersInfo = members.find(
+                                    (m) => m.workspaceId === workspace._id
+                                );
+                                const membersCount = membersInfo?.members.length || 0;
 
-                            return (
-                                <WorkspaceCard
-                                    key={workspace._id}
-                                    workspace={workspace}
-                                    membersCount={membersCount}
-                                    channelsCount={workspace.channelsCount}
-                                    isSelected={workspace._id === selectedWorkspace}
-                                    onSelect={onSelectWorkspace}
-                                />
-                            );
-                        })}
+                                return (
+                                    <WorkspaceCard
+                                        key={workspace._id}
+                                        workspace={workspace}
+                                        membersCount={membersCount}
+                                        channelsCount={workspace.channelsCount}
+                                        isSelected={workspace._id === selectedWorkspace}
+                                        onSelect={onSelectWorkspace}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    gridColumn: "1 / -1",
+                                    textAlign: "center",
+                                    width: "100%",
+                                    display: "block",
+                                }}
+                            >
+                                No se encontraron workspaces
+                            </Typography>
+    
+                        )}
                     </CardsContainer>
 
                     <CreateWorkspaceCardComponent

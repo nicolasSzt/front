@@ -54,7 +54,7 @@ const StyledFormCard = styled(FormCard)`
   }
 `;
 
-export const AuthForm = () => {
+const AuthForm = () => {
     const navigate = useNavigate();
     const [formState, setFormState] = useState(initialFormState);
     const [uiState, setUiState] = useState(initialUiState);
@@ -226,3 +226,5 @@ export const AuthForm = () => {
         </Container>
     );
 };
+
+export default AuthForm;
