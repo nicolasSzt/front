@@ -5,7 +5,7 @@ import { createWorkspace } from "@/services/workspaceService";
 
 export const useWorkspaceSelector = () => {
     const [selectedWorkspace, setSelectedWorkspace] = useState(null);
-
+    const navigate = useNavigate();
     const handleWorkspaceSelect = useCallback(
         (workspaceId) => {
             navigate(`/workspaceDetail/${workspaceId}`);
