@@ -77,19 +77,15 @@ export const WorkspaceDetail = () => {
     (workspace) => workspace._id === workspace_id
   );
 
-  // Estados para modal y formularios del Sidebar
   const [openModal, setOpenModal] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [channelNameError, setChannelNameError] = useState("");
 
-  // Abrir/cerrar drawer para mobile
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
-  // Abrir modal
   const handleOpenModal = () => setOpenModal(true);
 
-  // Cerrar modal y resetear inputs y errores
   const handleCloseModal = () => {
     setOpenModal(false);
     setNewChannelName("");
@@ -97,7 +93,6 @@ export const WorkspaceDetail = () => {
     setChannelNameError("");
   };
 
-  // Validar nombre de canal al cambiar input
   const handleChangeWithValidation = (e) => {
     const value = e.target.value;
     setNewChannelName(value);

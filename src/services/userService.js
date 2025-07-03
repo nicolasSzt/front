@@ -15,7 +15,7 @@ const kyClient = () => {
 export const getAllUserInformation = async () => {
   try {
     const response = await kyClient().get(`users`).json();
-    return { users: response.data.users }; // envolver en objeto con 'users'
+    return { users: response.data.users }; 
   } catch (error) {
     console.error("Error fetching user info:", error);
     throw error;

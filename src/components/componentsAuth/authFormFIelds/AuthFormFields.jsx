@@ -87,7 +87,7 @@ const AuthFormFields = ({
       onChange={handleChange}
       disabled={loading}
       required
-      error={Boolean(error)}  // <-- forzamos boolean
+      error={Boolean(error)}
       helperText={helperText}
       InputProps={{
         startAdornment: (

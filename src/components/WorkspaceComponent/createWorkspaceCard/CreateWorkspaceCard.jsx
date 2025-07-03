@@ -15,7 +15,7 @@ const PlusIcon = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
-  user-select: none; /* para que no se pueda seleccionar el signo + */
+  user-select: none;
 `;
 
 const CreateWorkspaceCardComponent = ({ onCreateWorkspace, title, description, buttonText }) => {
