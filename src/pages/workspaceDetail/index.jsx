@@ -52,17 +52,18 @@ const MainContent = styled(Box)`
   margin-top: 64px;
   background-color: ${({ theme }) => theme.palette.background.default};
   min-height: 100vh;
-  
+
   @media (min-width: 900px) {
     margin-top: 0;
   }
 `;
 
-
 export const WorkspaceDetail = () => {
   const { workspace_id } = useParams();
   const { workspaces } = useWorkspacesWithChannels();
+
   const [mobileOpen, setMobileOpen] = useState(false);
+
   const {
     channels,
     selectedChannel,
@@ -76,7 +77,42 @@ export const WorkspaceDetail = () => {
     (workspace) => workspace._id === workspace_id
   );
 
+  // Estados para modal y formularios del Sidebar
+  const [openModal, setOpenModal] = useState(false);
+  const [newChannelName, setNewChannelName] = useState("");
+  const [newChannelDescription, setNewChannelDescription] = useState("");
+  const [channelNameError, setChannelNameError] = useState("");
+
+  // Abrir/cerrar drawer para mobile
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
+  // Abrir modal
+  const handleOpenModal = () => setOpenModal(true);
+
+  // Cerrar modal y resetear inputs y errores
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setNewChannelName("");
+    setNewChannelDescription("");
+    setChannelNameError("");
+  };
+
+  // Validar nombre de canal al cambiar input
+  const handleChangeWithValidation = (e) => {
+    const value = e.target.value;
+    setNewChannelName(value);
+
+    if (!value.trim()) {
+      setChannelNameError("");
+      return;
+    }
+
+    const exists = channels.some(
+      (ch) => ch.title.toLowerCase() === value.toLowerCase()
+    );
+
+    setChannelNameError(exists ? "Ya existe un canal con este nombre." : "");
+  };
 
   if (isLoading) {
     return (
@@ -118,21 +154,27 @@ export const WorkspaceDetail = () => {
       </MobileAppBar>
 
       <Sidebar
+        channels={channels}
         selectedChannel={selectedChannel}
         onChannelSelect={handleChannelSelect}
         mobileOpen={mobileOpen}
-        currentWorkspace={currentWorkspace}
         onMobileToggle={handleDrawerToggle}
-        channels={channels}
+        currentWorkspace={currentWorkspace}
         workspace_id={workspace_id}
+        openModal={openModal}
+        onOpenModal={handleOpenModal}
+        onCloseModal={handleCloseModal}
+        newChannelName={newChannelName}
+        newChannelDescription={newChannelDescription}
+        setNewChannelName={setNewChannelName}
+        setNewChannelDescription={setNewChannelDescription}
+        channelNameError={channelNameError}
+        handleChangeWithValidation={handleChangeWithValidation}
       />
 
       <MainContent>
         {selectedChannel ? (
-          <Chat
-            workspaceId={workspace_id}
-            channelId={selectedChannel}
-          />
+          <Chat workspaceId={workspace_id} channelId={selectedChannel} />
         ) : (
           <Typography variant="h5" color="text.secondary">
             Selecciona un canal para comenzar a chatear
@@ -143,3 +185,4 @@ export const WorkspaceDetail = () => {
   );
 };
 
+export default WorkspaceDetail;

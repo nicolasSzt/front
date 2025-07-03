@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import {
   Drawer,
@@ -14,10 +14,6 @@ import {
   InputAdornment,
   useTheme,
   useMediaQuery,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
 } from "@mui/material";
 import {
@@ -30,10 +26,12 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
+import Modal from "@/components/modal";
 import { createChannel } from "@/services/channelService";
-import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 280;
+
+// ─────────── Styled components ───────────
 
 const SidebarContainer = styled(Box)`
   height: 100%;
@@ -71,6 +69,10 @@ const NavigationContainer = styled(Box)`
   padding-right: ${({ theme }) => theme.spacing(1)};
 `;
 
+const ListItemIconStyled = styled(ListItemIcon)`
+  min-width: 32px;
+`;
+
 const StyledListItemButton = styled(ListItemButton)`
   border-radius: ${({ theme }) => theme.spacing(2)};
   margin-left: ${({ theme }) => theme.spacing(1)};
@@ -101,14 +103,9 @@ const AddItemButton = styled(ListItemButton)`
   border-radius: ${({ theme }) => theme.spacing(2)};
 `;
 
-const ListItemIconStyled = styled(ListItemIcon)`
-  min-width: 32px;
-`;
-
 const NavBox = styled(Box)`
   display: ${({ ismobile }) => (ismobile === "true" ? "block" : "none")};
   flex-shrink: 0;
-
   @media (min-width: 900px) {
     width: ${drawerWidth}px;
     display: ${({ ismobile }) => (ismobile === "true" ? "none" : "block")};
@@ -117,11 +114,9 @@ const NavBox = styled(Box)`
 
 const MobileDrawer = styled(Drawer)`
   display: block;
-
   @media (min-width: 900px) {
     display: none;
   }
-
   & .MuiDrawer-paper {
     box-sizing: border-box;
     width: ${drawerWidth}px;
@@ -131,11 +126,9 @@ const MobileDrawer = styled(Drawer)`
 
 const DesktopDrawer = styled(Drawer)`
   display: none;
-
   @media (min-width: 900px) {
     display: block;
   }
-
   & .MuiDrawer-paper {
     box-sizing: border-box;
     width: ${drawerWidth}px;
@@ -144,97 +137,191 @@ const DesktopDrawer = styled(Drawer)`
   }
 `;
 
-const DialogContentStyled = styled(DialogContent)`
+const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(2)};
-  && {
-    padding-top: ${({ theme }) => theme.spacing(1)};
-  }
-`;
-const DialogTitleStyled = styled(DialogTitle)`
-  padding: ${({ theme }) => theme.spacing(2)};
-  display: flex;
-  color: ${({ theme }) => theme.palette.text.primary};
+  padding-top: ${({ theme }) => theme.spacing(1)};
 `;
 
 const Sidebar = ({
   channels = [],
   selectedChannel = null,
-  onChannelSelect = () => { },
-  mobileOpen = false,
-  onMobileToggle = () => { },
-  currentWorkspace = null,
+  onChannelSelect,
+  mobileOpen,
+  onMobileToggle,
+  currentWorkspace,
   workspace_id,
+  openModal,
+  onOpenModal,
+  onCloseModal,
+  newChannelName,
+  setNewChannelName,
+  newChannelDescription,
+  setNewChannelDescription,
+  channelNameError,
+  handleChangeWithValidation,
 }) => {
-  const [channelsExpanded, setChannelsExpanded] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [openModal, setOpenModal] = useState(false);
-  const [newChannelName, setNewChannelName] = useState("");
-  const [newChannelDescription, setNewChannelDescription] = useState("");
+  const [channelsExpanded, setChannelsExpanded] = React.useState(true);
+  const [searchTerm, setSearchTerm] = React.useState("");
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setNewChannelName("");
-    setNewChannelDescription("");
-  };
+  const filteredChannels = channels.filter((channel) =>
+    channel.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleCreateChannel = async () => {
+    if (channelNameError) return;
     try {
       await createChannel(newChannelName, newChannelDescription, workspace_id);
-      handleCloseModal();
-      navigate(0);
+      onCloseModal();
+      window.location.reload(); // o idealmente: refetch channels
     } catch (error) {
       console.error("Error al crear canal", error);
     }
   };
 
-  const handleChannelClick = (channelId) => {
-    onChannelSelect(channelId);
-    if (isMobile) {
-      onMobileToggle();
-    }
-  };
+  const renderSidebarContent = () => (
+    <SidebarContainer>
+      <WorkspaceHeader
+        title={currentWorkspace?.title || ""}
+        subtitle={currentWorkspace?.description || ""}
+      />
+      {isMobile && (
+        <CloseButtonContainer>
+          <IconButton onClick={onMobileToggle} size="small">
+            <CloseIcon />
+          </IconButton>
+        </CloseButtonContainer>
+      )}
 
-  const filteredChannels = channels.filter((channel) =>
-    channel.title.toLowerCase().includes(searchTerm.toLowerCase())
+      <SearchContainer>
+        <StyledTextField
+          fullWidth
+          size="small"
+          placeholder="Buscar canales"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </SearchContainer>
+
+      <NavigationContainer>
+        <List dense>
+          <StyledListItemButton
+            onClick={() => setChannelsExpanded(!channelsExpanded)}
+          >
+            <ListItemIconStyled>
+              {channelsExpanded ? <ExpandLess /> : <ExpandMore />}
+            </ListItemIconStyled>
+            <ListItemText
+              primary="Canales"
+              primaryTypographyProps={{
+                variant: "body2",
+                fontWeight: 600,
+                color: "text.secondary",
+              }}
+            />
+          </StyledListItemButton>
+
+          <Collapse in={channelsExpanded} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {filteredChannels.map((channel) => (
+                <ListItem key={channel._id} disablePadding>
+                  <ChannelListItemButton
+                    selected={selectedChannel === channel._id}
+                    onClick={() => {
+                      onChannelSelect(channel._id);
+                      if (isMobile) onMobileToggle();
+                    }}
+                  >
+                    <ListItemIconStyled>
+                      {channel.isPrivate ? (
+                        <LockIcon fontSize="small" />
+                      ) : (
+                        <HashIcon fontSize="small" />
+                      )}
+                    </ListItemIconStyled>
+                    <ListItemText
+                      primary={channel.title}
+                      primaryTypographyProps={{ variant: "body2" }}
+                    />
+                  </ChannelListItemButton>
+                </ListItem>
+              ))}
+
+              <ListItem disablePadding>
+                <AddItemButton onClick={onOpenModal}>
+                  <ListItemIconStyled>
+                    <AddIcon fontSize="small" />
+                  </ListItemIconStyled>
+                  <ListItemText
+                    primary="Agregar canal"
+                    primaryTypographyProps={{
+                      variant: "body2",
+                      color: "text.secondary",
+                      fontWeight: 600,
+                    }}
+                  />
+                </AddItemButton>
+              </ListItem>
+            </List>
+          </Collapse>
+        </List>
+      </NavigationContainer>
+    </SidebarContainer>
   );
+
   return (
     <NavBox component="nav" ismobile={isMobile ? "true" : "false"}>
-      <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="sm">
-        <DialogTitleStyled>Create a new channel</DialogTitleStyled>
-        <DialogContentStyled>
+      <Modal
+        open={openModal}
+        onClose={onCloseModal}
+        title="Crear un nuevo canal"
+        actions={
+          <>
+            <Button onClick={onCloseModal} color="secondary">
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleCreateChannel}
+              variant="contained"
+              disabled={
+                !newChannelName.trim() ||
+                !newChannelDescription.trim() ||
+                !!channelNameError
+              }
+            >
+              Crear
+            </Button>
+          </>
+        }
+      >
+        <ModalContent>
           <TextField
-            label="Channel Name"
+            label="Nombre del canal"
             value={newChannelName}
-            onChange={(e) => setNewChannelName(e.target.value)}
+            onChange={handleChangeWithValidation}
             fullWidth
+            error={!!channelNameError}
+            helperText={channelNameError || ""}
           />
           <TextField
-            label="Description"
+            label="Descripción"
             value={newChannelDescription}
             onChange={(e) => setNewChannelDescription(e.target.value)}
             fullWidth
           />
-        </DialogContentStyled>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="secondary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleCreateChannel}
-            variant="contained"
-            disabled={!newChannelName.trim()}
-          >
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </ModalContent>
+      </Modal>
 
       <MobileDrawer
         variant="temporary"
@@ -242,178 +329,14 @@ const Sidebar = ({
         onClose={onMobileToggle}
         ModalProps={{ keepMounted: true }}
       >
-        <SidebarContainer>
-          <WorkspaceHeader title={currentWorkspace?.title || ""} />
-          {isMobile && (
-            <CloseButtonContainer>
-              <IconButton onClick={onMobileToggle} size="small">
-                <CloseIcon />
-              </IconButton>
-            </CloseButtonContainer>
-          )}
-          <SearchContainer>
-            <StyledTextField
-              fullWidth
-              size="small"
-              placeholder="Search channels"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon fontSize="small" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </SearchContainer>
-
-          <NavigationContainer>
-            <List dense>
-              <StyledListItemButton onClick={() => setChannelsExpanded(!channelsExpanded)}>
-                <ListItemIconStyled>
-                  {channelsExpanded ? <ExpandLess /> : <ExpandMore />}
-                </ListItemIconStyled>
-                <ListItemText
-                  primary="Channels"
-                  primaryTypographyProps={{
-                    variant: "body2",
-                    fontWeight: 600,
-                    color: "text.secondary",
-                  }}
-                />
-              </StyledListItemButton>
-
-              <Collapse in={channelsExpanded} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {filteredChannels.map((channel) => (
-                    <ListItem key={channel._id} disablePadding>
-                      <ChannelListItemButton
-                        selected={selectedChannel === channel._id}
-                        onClick={() => handleChannelClick(channel._id)}
-                      >
-                        <ListItemIconStyled>
-                          {channel.isPrivate ? (
-                            <LockIcon fontSize="small" />
-                          ) : (
-                            <HashIcon fontSize="small" />
-                          )}
-                        </ListItemIconStyled>
-                        <ListItemText
-                          primary={channel.title}
-                          primaryTypographyProps={{ variant: "body2" }}
-                        />
-                      </ChannelListItemButton>
-                    </ListItem>
-                  ))}
-
-                  <ListItem disablePadding>
-                    <AddItemButton onClick={handleOpenModal}>
-                      <ListItemIconStyled>
-                        <AddIcon fontSize="small" />
-                      </ListItemIconStyled>
-                      <ListItemText
-                        primary="Add channels"
-                        primaryTypographyProps={{
-                          variant: "body2",
-                          color: "text.secondary",
-                          fontWeight: 600,
-                        }}
-                      />
-                    </AddItemButton>
-                  </ListItem>
-                </List>
-              </Collapse>
-            </List>
-          </NavigationContainer>
-        </SidebarContainer>
+        {renderSidebarContent()}
       </MobileDrawer>
 
       <DesktopDrawer variant="permanent" open>
-        <SidebarContainer>
-          <WorkspaceHeader
-            title={currentWorkspace?.title || ""}
-            subtitle={currentWorkspace?.description || ""}
-          />
-          <SearchContainer>
-            <StyledTextField
-              fullWidth
-              size="small"
-              placeholder="Search channels"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon fontSize="small" />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </SearchContainer>
-
-          <NavigationContainer>
-            <List dense>
-              <StyledListItemButton onClick={() => setChannelsExpanded(!channelsExpanded)}>
-                <ListItemIconStyled>
-                  {channelsExpanded ? <ExpandLess /> : <ExpandMore />}
-                </ListItemIconStyled>
-                <ListItemText
-                  primary="Channels"
-                  primaryTypographyProps={{
-                    variant: "body2",
-                    fontWeight: 600,
-                    color: "text.secondary",
-                  }}
-                />
-              </StyledListItemButton>
-
-              <Collapse in={channelsExpanded} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {filteredChannels.map((channel) => (
-                    <ListItem key={channel._id} disablePadding>
-                      <ChannelListItemButton
-                        selected={selectedChannel === channel._id}
-                        onClick={() => handleChannelClick(channel._id)}
-                      >
-                        <ListItemIconStyled>
-                          {channel.isPrivate ? (
-                            <LockIcon fontSize="small" />
-                          ) : (
-                            <HashIcon fontSize="small" />
-                          )}
-                        </ListItemIconStyled>
-                        <ListItemText
-                          primary={channel.title}
-                          primaryTypographyProps={{ variant: "body2" }}
-                        />
-                      </ChannelListItemButton>
-                    </ListItem>
-                  ))}
-
-                  <ListItem disablePadding>
-                    <AddItemButton onClick={handleOpenModal}>
-                      <ListItemIconStyled>
-                        <AddIcon fontSize="small" />
-                      </ListItemIconStyled>
-                      <ListItemText
-                        primary="Add channels"
-                        primaryTypographyProps={{
-                          variant: "body2",
-                          color: "text.secondary",
-                          fontWeight: 600,
-                        }}
-                      />
-                    </AddItemButton>
-                  </ListItem>
-                </List>
-              </Collapse>
-            </List>
-          </NavigationContainer>
-        </SidebarContainer>
+        {renderSidebarContent()}
       </DesktopDrawer>
     </NavBox>
   );
-}
+};
 
 export default Sidebar;

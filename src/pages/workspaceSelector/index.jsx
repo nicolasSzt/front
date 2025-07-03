@@ -83,7 +83,6 @@ export const WorkspaceSelector = () => {
     return (
         <WorkspaceSelectorLayout
             workspaces={workspaces}
-            users={users}
             members={membersByWorkspace}
             isLoading={isLoading}
             isError={isError}

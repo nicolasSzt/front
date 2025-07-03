@@ -1,25 +1,22 @@
 import React from "react";
 import styled from "@emotion/styled";
 import {
-    MainContainer,
-    ContentContainer,
+  MainContainer,
+  ContentContainer,
 } from "@/components/styled/Container";
 import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
 import WorkspaceFooter from "@/components/WorkspaceComponent/workspaceFooter/WorkspaceFooter";
 import {
-    CircularProgress,
-    Typography,
-    Box,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    TextField,
-    DialogActions,
-    Button,
+  CircularProgress,
+  Typography,
+  Box,
+  TextField,
+  Button,
 } from "@mui/material";
 import GlobalStyles from "@/components/GlobalStyles";
 import CreateWorkspaceCardComponent from "../createWorkspaceCard/CreateWorkspaceCard";
 import WorkspaceCard from "@/components/WorkspaceComponent/workspaceCard/WorkspaceCard";
+import Modal from "@/components/modal";
 
 const CenteredContainer = styled(Box)`
   display: flex;
@@ -41,130 +38,131 @@ const CardsContainer = styled.div`
   }
 `;
 
-const DialogContentStyled = styled(DialogContent)`
+const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(2)};
 `;
 
 const WorkspaceSelectorLayout = ({
-    workspaces,
-    isLoading,
-    isError,
-    error,
-    selectedWorkspace,
-    onSelectWorkspace,
-    users,
-    members,
-    dialog,
-    workspaceForm,
-    onChangeWorkspaceForm,
-    onSubmitWorkspace,
-    titleError,
-    texts,
+  workspaces,
+  isLoading,
+  isError,
+  error,
+  selectedWorkspace,
+  onSelectWorkspace,
+  members,
+  dialog,
+  workspaceForm,
+  onChangeWorkspaceForm,
+  onSubmitWorkspace,
+  titleError,
+  texts,
 }) => {
-    if (isLoading || isError) {
-        return (
+  return (
+    <>
+      <GlobalStyles />
+      <MainContainer>
+        <ContentContainer>
+          <WorkspaceHeader title={texts.title} />
+
+          {(isLoading || isError) ? (
             <CenteredContainer>
-                {isLoading && (
-                    <>
-                        <CircularProgress />
-                        <Typography mt={2}>Cargando datos...</Typography>
-                    </>
-                )}
-                {isError && (
-                    <Typography color="error">
-                        Error al obtener datos: {error?.message || "Error desconocido"}
-                    </Typography>
-                )}
+              {isLoading && (
+                <>
+                  <CircularProgress />
+                  <Typography mt={2}>Cargando datos...</Typography>
+                </>
+              )}
+              {isError && (
+                <Typography color="error">
+                  Error al obtener datos: {error?.message || "Error desconocido"}
+                </Typography>
+              )}
             </CenteredContainer>
-        );
-    }
+          ) : (
+            <>
+              <CardsContainer>
+                {workspaces.map((workspace) => {
+                  const membersInfo = members.find(
+                    (m) => m.workspaceId === workspace._id
+                  );
+                  const membersCount = membersInfo?.members.length || 0;
 
-    return (
-        <>
-            <GlobalStyles />
-            <MainContainer>
-                <ContentContainer>
-                    <WorkspaceHeader title={texts.title} />
-
-                    <CardsContainer>
-                        {workspaces.map((workspace) => {
-                            const membersInfo = members.find(m => m.workspaceId === workspace._id);
-                            const membersCount = membersInfo?.members.length || 0;
-
-                            return (
-                                <WorkspaceCard
-                                    key={workspace._id}
-                                    workspace={workspace}
-                                    membersCount={membersCount}
-                                    channelsCount={workspace.channelsCount}
-                                    isSelected={workspace._id === selectedWorkspace}
-                                    onSelect={onSelectWorkspace}
-                                />
-                            );
-                        })}
-                    </CardsContainer>
-
-                    <CreateWorkspaceCardComponent
-                        onCreateWorkspace={dialog.openDialog}
-                        title={texts.createNew}
-                        description={texts.createNewDescription}
-                        buttonText={texts.createButton}
+                  return (
+                    <WorkspaceCard
+                      key={workspace._id}
+                      workspace={workspace}
+                      membersCount={membersCount}
+                      channelsCount={workspace.channelsCount}
+                      isSelected={workspace._id === selectedWorkspace}
+                      onSelect={onSelectWorkspace}
                     />
+                  );
+                })}
+              </CardsContainer>
 
-                    <WorkspaceFooter
-                        helpText={texts.helpText}
-                        supportText={texts.contactSupport}
-                    />
-                </ContentContainer>
-            </MainContainer>
+              <CreateWorkspaceCardComponent
+                onCreateWorkspace={dialog.openDialog}
+                title={texts.createNew}
+                description={texts.createNewDescription}
+                buttonText={texts.createButton}
+              />
 
-            <Dialog
-                open={dialog.open}
-                onClose={dialog.closeDialog}
-                fullWidth
-                maxWidth="sm"
+              <WorkspaceFooter
+                helpText={texts.helpText}
+                supportText={texts.contactSupport}
+              />
+            </>
+          )}
+        </ContentContainer>
+      </MainContainer>
+
+      <Modal
+        open={dialog.open}
+        onClose={dialog.closeDialog}
+        title="Crear nuevo workspace"
+        actions={
+          <>
+            <Button onClick={dialog.closeDialog}>Cancelar</Button>
+            <Button
+              onClick={onSubmitWorkspace}
+              variant="contained"
+              disabled={
+                !workspaceForm.title.trim() ||
+                !workspaceForm.description.trim() ||
+                !!titleError
+              }
             >
-                <DialogTitle>Crear nuevo workspace</DialogTitle>
-                <DialogContentStyled>
-                    <TextField
-                        autoFocus
-                        label="Título del workspace"
-                        fullWidth
-                        variant="standard"
-                        name="title"
-                        value={workspaceForm.title}
-                        onChange={onChangeWorkspaceForm}
-                        error={!!titleError}
-                        helperText={titleError || ""}
-                    />
-                    <TextField
-                        label="Descripción del workspace"
-                        fullWidth
-                        variant="standard"
-                        name="description"
-                        value={workspaceForm.description}
-                        onChange={onChangeWorkspaceForm}
-                    />
-                </DialogContentStyled>
-                <DialogActions>
-                    <Button onClick={dialog.closeDialog}>Cancelar</Button>
-                    <Button
-                        onClick={onSubmitWorkspace}
-                        disabled={
-                            !workspaceForm.title.trim() ||
-                            !workspaceForm.description.trim() ||
-                            !!titleError
-                        }
-                        variant="contained"
-                    >
-                        Crear
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
+              Crear
+            </Button>
+          </>
+        }
+      >
+        <ModalContent>
+          <TextField
+            autoFocus
+            label="Título del workspace"
+            name="title"
+            value={workspaceForm.title}
+            onChange={onChangeWorkspaceForm}
+            error={!!titleError}
+            helperText={titleError || ""}
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            label="Descripción del workspace"
+            name="description"
+            value={workspaceForm.description}
+            onChange={onChangeWorkspaceForm}
+            fullWidth
+            variant="standard"
+          />
+        </ModalContent>
+      </Modal>
+    </>
+  );
 };
 
 export default WorkspaceSelectorLayout;
