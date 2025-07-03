@@ -1,36 +1,19 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import {
-  Box,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { useParams } from "react-router-dom";
-
 import Sidebar from "@/components/sidebar";
+import Chat from "@/components/ChatArea";
+import { useTheme } from "@mui/material/styles";
+import { CircularProgress, Typography, Box, AppBar, Toolbar, IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useParams, useNavigate } from "react-router-dom";
 import { useWorkspaceChannels } from "@/hooks/useWorkspaceChannels";
 import useWorkspacesWithChannels from "@/hooks/useWorkspaceWithChannels";
-import Chat from "@/components/ChatArea";
+import { createChannel } from "@/services/channelService";
 
-const MainContainer = styled(Box)`display: flex;`;
+const drawerWidth = 280;
 
-const LoadingContainer = styled(Box)`
+const MainContainer = styled(Box)`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-`;
-
-const ErrorContainer = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 `;
 
 const MobileAppBar = styled(AppBar)`
@@ -54,15 +37,37 @@ const MainContent = styled(Box)`
   min-height: 100vh;
 
   @media (min-width: 900px) {
+    margin-left: ${drawerWidth}px;  /* Aquí dejamos espacio para el sidebar */
     margin-top: 0;
   }
 `;
 
-export const WorkspaceDetail = () => {
+const LoadingContainer = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+`;
+
+const ErrorContainer = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const WorkspaceDetail = () => {
   const { workspace_id } = useParams();
   const { workspaces } = useWorkspacesWithChannels();
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [newChannelName, setNewChannelName] = useState("");
+  const [newChannelDescription, setNewChannelDescription] = useState("");
+  const [channelNameError, setChannelNameError] = useState("");
+  const [channelSearchTerm, setChannelSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const {
     channels,
@@ -76,11 +81,6 @@ export const WorkspaceDetail = () => {
   const currentWorkspace = workspaces.find(
     (workspace) => workspace._id === workspace_id
   );
-
-  const [openModal, setOpenModal] = useState(false);
-  const [newChannelName, setNewChannelName] = useState("");
-  const [newChannelDescription, setNewChannelDescription] = useState("");
-  const [channelNameError, setChannelNameError] = useState("");
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
@@ -107,6 +107,26 @@ export const WorkspaceDetail = () => {
     );
 
     setChannelNameError(exists ? "Ya existe un canal con este nombre." : "");
+  };
+
+  const handleCreateChannel = async () => {
+    if (
+      !newChannelName.trim() ||
+      !newChannelDescription.trim() ||
+      channelNameError
+    ) return;
+
+    try {
+      await createChannel(
+        newChannelName.trim(),
+        newChannelDescription.trim(),
+        workspace_id
+      );
+      handleCloseModal();
+      navigate(0); // refresca la página o actualiza datos
+    } catch (err) {
+      console.error("Error al crear canal:", err);
+    }
   };
 
   if (isLoading) {
@@ -139,6 +159,7 @@ export const WorkspaceDetail = () => {
             aria-label="abrir menú"
             edge="start"
             onClick={handleDrawerToggle}
+            size="large"
           >
             <MenuIcon />
           </IconButton>
@@ -155,6 +176,7 @@ export const WorkspaceDetail = () => {
         mobileOpen={mobileOpen}
         onMobileToggle={handleDrawerToggle}
         currentWorkspace={currentWorkspace}
+        onCreateChannel={handleCreateChannel}
         workspace_id={workspace_id}
         openModal={openModal}
         onOpenModal={handleOpenModal}
@@ -165,6 +187,8 @@ export const WorkspaceDetail = () => {
         setNewChannelDescription={setNewChannelDescription}
         channelNameError={channelNameError}
         handleChangeWithValidation={handleChangeWithValidation}
+        searchTerm={channelSearchTerm}
+        onSearchChange={setChannelSearchTerm}
       />
 
       <MainContent>
