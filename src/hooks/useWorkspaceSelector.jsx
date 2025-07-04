@@ -65,7 +65,6 @@ const useWorkspaceSelector = () => {
     async (title, description) => {
       const newWorkspace = await createWorkspace(title, description);
 
-      // Invalida la query para que se vuelva a consultar
       await queryClient.invalidateQueries({ queryKey: ["workspaces"] });
 
       setSelectedWorkspace(newWorkspace._id);

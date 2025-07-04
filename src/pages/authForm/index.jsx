@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Container } from "@/components/styled/formStyled/Container";
 import FormCard from "@/components/styled/formStyled/FormCard";
@@ -12,8 +11,11 @@ import AuthFooter from "@/components/componentsAuth/authFooter/AuthFooter";
 import Divider from "@/components/styled/formStyled/Divider";
 import { Button } from "@mui/material";
 import { REGISTER_FIELD_NAME } from "@/constans/form/register";
-import { loginAuth, registerAuth } from "@/services/authServices";
 import styled from "@emotion/styled";
+import handleRegister from "@/helpers/handleRegister";
+import { useNavigate } from "react-router-dom";
+import handleLogin from "@/helpers/handleLogin";
+import useUserInformation from "@/hooks/useUserInformation";
 
 const initialFormState = {
     [REGISTER_FIELD_NAME.NAME]: "",
@@ -55,9 +57,10 @@ const StyledFormCard = styled(FormCard)`
 `;
 
 const AuthForm = () => {
-    const navigate = useNavigate();
     const [formState, setFormState] = useState(initialFormState);
     const [uiState, setUiState] = useState(initialUiState);
+    const navigate = useNavigate();
+    const { users } = useUserInformation();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -71,72 +74,24 @@ const AuthForm = () => {
         setUiState((prev) => ({ ...prev, ...updates }));
     };
 
-    const handleLogin = async () => {
-        try {
-            setUi({ loading: true, error: "" });
+    const handleLoginSubmit = handleLogin({
+        formState,
+        setUi,
+        navigate
+    });
 
-            const res = await loginAuth({
-                email: formState[REGISTER_FIELD_NAME.EMAIL],
-                password: formState[REGISTER_FIELD_NAME.PASSWORD],
-            });
-
-            if (res.ok) {
-                setUi({ successMessage: "¡Bienvenido de vuelta!" });
-                navigate("/workspacesSelector");
-            } else {
-                setUi({ error: res.message });
-            }
-        } catch (error) {
-            setUi({
-                error: error.message || "Ocurrió un error al comunicarnos con el servidor",
-            });
-        } finally {
-            setUi({ loading: false });
-        }
-    };
-
-    const handleRegister = async () => {
-        try {
-            setUi({ loading: true, error: "" });
-
-            if (
-                formState[REGISTER_FIELD_NAME.PASSWORD] !==
-                formState[REGISTER_FIELD_NAME.CONFIRM_PASSWORD]
-            ) {
-                setUi({ error: "Las contraseñas no coinciden", loading: false });
-                return;
-            }
-
-            const res = await registerAuth({
-                name: formState[REGISTER_FIELD_NAME.NAME],
-                email: formState[REGISTER_FIELD_NAME.EMAIL],
-                password: formState[REGISTER_FIELD_NAME.PASSWORD],
-            });
-
-            if (res.ok) {
-                setUi({
-                    successMessage: "¡Cuenta creada exitosamente!",
-                    isLogin: true,
-                });
-                setFormState(initialFormState);
-            } else {
-                setUi({ error: res.message });
-            }
-        } catch (error) {
-            setUi({
-                error: error.message || "Ocurrió un error al comunicarnos con el servidor",
-            });
-        } finally {
-            setUi({ loading: false });
-        }
-    };
+    const handleRegisterSubmit = handleRegister({
+        formState,
+        setUi,
+        resetForm: () => setFormState(initialFormState),
+    });
 
     const handleSubmit = async (e) => {
-        e?.preventDefault();
+        e.preventDefault();
         if (uiState.isLogin) {
-            await handleLogin();
+            await handleLoginSubmit();
         } else {
-            await handleRegister();
+            await handleRegisterSubmit();
         }
     };
 
@@ -174,7 +129,6 @@ const AuthForm = () => {
         <Container>
             <StyledFormCard
                 elevation={0}
-
             >
                 <StyledCardContent>
                     <AuthHeader isLogin={uiState.isLogin} />

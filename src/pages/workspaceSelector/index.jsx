@@ -4,7 +4,6 @@ import useForm from "@/hooks/useForm";
 import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSelectorLayout/WorkspaceLayaout";
 import useMemberInformation from "@/hooks/useMemerInformation";
 import { Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import useWorkspaceManager from "@/hooks/useWorkspaceWithChannels";
 
 const WorkspaceSelector = () => {
@@ -17,8 +16,7 @@ const WorkspaceSelector = () => {
         handleWorkspaceSelect,
         handleCreateWorkspace,
     } = useWorkspaceManager();
-    
-    const navigate = useNavigate();
+
     const { membersByWorkspace } = useMemberInformation();
     const [open, setOpen] = useState(false);
     const [titleError, setTitleError] = useState("");
@@ -47,7 +45,7 @@ const WorkspaceSelector = () => {
             try {
                 await handleCreateWorkspace(form_state.title, form_state.description);
                 dialog.closeDialog();
-                Navigate(0) // o mejor, invalidar cache/react-query
+                Navigate(0)
             } catch (e) {
                 console.error("Error al crear workspace", e);
             }

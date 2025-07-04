@@ -23,7 +23,6 @@ const useWorkspaceManager = () => {
     refetchOnWindowFocus: false,
   });
 
-  // Filtrar null o workspace sin _id
   const validWorkspaces = workspacesData.filter((w) => w && w._id);
 
   const workspaceIds = validWorkspaces.map((w) => w._id);
