@@ -12,7 +12,6 @@ const useWorkspaceSelector = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // Traer todos los workspaces
   const {
     data: workspacesData = [],
     isLoading: loadingWorkspaces,
@@ -24,20 +23,17 @@ const useWorkspaceSelector = () => {
     refetchOnWindowFocus: false,
   });
 
-  // Filtrar los que tienen _id válido
   const validWorkspaces = workspacesData.filter((w) => !!w._id);
 
-  // Obtener los canales de cada workspace
   const channelsQueries = useQueries({
     queries: validWorkspaces.map((workspace) => ({
       queryKey: ["channels", workspace._id],
       queryFn: () => getAllChannelsByWorkspace(workspace._id),
-      enabled: !!workspace._id, // evita fetch con undefined
+      enabled: !!workspace._id,
       refetchOnWindowFocus: false,
     })),
   });
 
-  // Combinar workspaces con la cantidad de canales
   const workspaces = validWorkspaces.map((workspace, i) => {
     const channels = channelsQueries[i]?.data ?? [];
     return {
@@ -46,12 +42,10 @@ const useWorkspaceSelector = () => {
     };
   });
 
-  // Manejo de estados de carga y errores
   const isLoading = loadingWorkspaces || channelsQueries.some((q) => q.isLoading);
   const isError = errorWorkspaces || channelsQueries.some((q) => q.isError);
   const error = errorWorkspaceMessage || channelsQueries.find((q) => q.isError)?.error;
 
-  // Seleccionar workspace (con navegación)
   const handleWorkspaceSelect = useCallback(
     (workspaceId) => {
       setSelectedWorkspace(workspaceId);
@@ -60,7 +54,6 @@ const useWorkspaceSelector = () => {
     [navigate]
   );
 
-  // Crear nuevo workspace
   const handleCreateWorkspace = useCallback(
     async (title, description) => {
       const newWorkspace = await createWorkspace(title, description);
