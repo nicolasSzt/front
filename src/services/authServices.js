@@ -34,16 +34,13 @@ export const loginAuth = async ({ email, password }) => {
       if (errorBody && errorBody.message) {
         message = errorBody.message;
       }
-    } catch {
-    }
+    } catch {}
 
     const err = new Error(message || error.message || "");
     err.status = error.response ? error.response.status : null;
     throw err;
   }
 };
-
-
 
 export const registerAuth = async ({ name, email, password }) => {
   try {
@@ -59,11 +56,17 @@ export const registerAuth = async ({ name, email, password }) => {
 
     return response;
   } catch (error) {
-    console.error(error);
-    throw {
-      message:
-        error.message ||
-        "Ocurrió un error al comunicarnos con el servidor (inténtalo más tarde)",
-    };
+    let message = "";
+
+    try {
+      const errorBody = await error.response.json();
+      if (errorBody && errorBody.message) {
+        message = errorBody.message;
+      }
+    } catch {}
+
+    const err = new Error(message || error.message || "");
+    err.status = error.response ? error.response.status : null;
+    throw err;
   }
 };
