@@ -8,7 +8,6 @@ const handleLogin = ({ formState, setUi, navigate }) => async () => {
         const res = await loginAuth({
             email: formState[REGISTER_FIELD_NAME.EMAIL],
             password: formState[REGISTER_FIELD_NAME.PASSWORD],
-            message: "",
         });
         console.log("Respuesta loginAuth:", res);
 

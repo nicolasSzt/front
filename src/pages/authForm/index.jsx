@@ -15,7 +15,6 @@ import styled from "@emotion/styled";
 import handleRegister from "@/helpers/handleRegister";
 import { useNavigate } from "react-router-dom";
 import handleLogin from "@/helpers/handleLogin";
-import useUserInformation from "@/hooks/useUserInformation";
 
 const initialFormState = {
     [REGISTER_FIELD_NAME.NAME]: "",
@@ -60,7 +59,6 @@ const AuthForm = () => {
     const [formState, setFormState] = useState(initialFormState);
     const [uiState, setUiState] = useState(initialUiState);
     const navigate = useNavigate();
-    const { users } = useUserInformation();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
