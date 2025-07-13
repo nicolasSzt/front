@@ -148,7 +148,6 @@ const Sidebar = ({
   onCloseModal = () => {},
   newChannelName = "",
   newChannelDescription = "",
-  setNewChannelName = () => {},
   setNewChannelDescription = () => {},
   channelNameError = "",
   handleChangeWithValidation = () => {},
@@ -181,8 +180,7 @@ const Sidebar = ({
               variant="contained"
               disabled={
                 !newChannelName.trim() ||
-                !newChannelDescription.trim() ||
-                !!channelNameError
+                !newChannelDescription.trim()
               }
             >
               Crear

@@ -110,12 +110,6 @@ const WorkspaceDetail = () => {
   };
 
   const handleCreateChannel = async () => {
-    if (
-      !newChannelName.trim() ||
-      !newChannelDescription.trim() ||
-      channelNameError
-    ) return;
-
     try {
       await createChannel(
         newChannelName.trim(),
