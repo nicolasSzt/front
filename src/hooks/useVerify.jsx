@@ -9,8 +9,6 @@ export const useVerify = (verify_token) => {
         refetchOnWindowFocus: false,
     });
 
-    console.log("isVerified", isVerified)
-    
     return {
         isVerified,
         refetch,

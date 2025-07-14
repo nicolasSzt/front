@@ -7,11 +7,12 @@ const Verification = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const verify_token = searchParams.get("verify_token")
+  console.log("verify_token", verify_token)
   const { isLoading, isVerified, error, refresh } = useVerify(verify_token)
 
   const handleRedirect = () => {
     if (isVerified) {
-      navigate("/verify")
+      navigate("/login")
     }
   }
   useEffect(() => {
