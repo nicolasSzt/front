@@ -1,7 +1,7 @@
 import AuthForm from "@/pages/authForm/index.jsx";
 import WorkspaceDetail from "@/pages/workspaceDetail/index.jsx";
 import WorkspaceSelector from "@/pages/workspaceSelector/index.jsx";
-
+import Verification from "@/pages/verify/index.jsx";
 const routes = [
   {
     path: "/",
@@ -14,6 +14,10 @@ const routes = [
   {
     path: "/workspaceDetail/:workspace_id",
     element: WorkspaceDetail,
+  },
+ {
+    path: "/verify",
+    element: Verification,
   },
   {
     path: "/login",
