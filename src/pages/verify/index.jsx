@@ -10,7 +10,6 @@ const Verification = () => {
   const { isLoading, isVerified, error, refresh } = useVerify(verify_token)
 
   const handleRedirect = () => {
-    console.log(isVerified)
     if (isVerified) {
       setTimeout(() => {
         navigate("/login")
@@ -19,8 +18,6 @@ const Verification = () => {
   }
 
   useEffect(() => {
-    console.log(isVerified)
-
     if (isVerified !== undefined) {
       handleRedirect()
     }
