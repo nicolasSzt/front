@@ -15,7 +15,9 @@ const kyClient = () => {
 
 export const verification = async (verify_token) => {
   try {
-    const response = await kyClient().post(`users/verify?verify_token=${verify_token}`).json();
+    const response = await kyClient()
+      .get(`users/verify?verify_token=${verify_token}`)
+      .json();
     return response;
   } catch (err) {
     console.error("Error al consultar estado de verificación:", err);

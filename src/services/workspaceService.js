@@ -1,4 +1,3 @@
-import { WorkspaceTitle } from "@/components/styled/Typography";
 import ENVIRONMENT from "@/constans/environment";
 import LOCALSTORAGE_KEYS from "@/constans/localStorage";
 import ky from "ky";
