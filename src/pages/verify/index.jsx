@@ -27,7 +27,7 @@ const Verification = () => {
     return (
       <Box textAlign="center" mt={10}>
         <CircularProgress />
-        <Typography mt={2}>Verificando cuenta...</Typography>
+        <Typography mt={2}>Verificando Email...</Typography>
       </Box>
     )
   }
@@ -49,7 +49,7 @@ const Verification = () => {
       </Typography>
       <Typography mt={2}>
         {isVerified
-          ? "Redirigiendo a tu cuenta..."
+          ? "Redirigiendo a la pantalla de inicio de sesión..."
           : "Necesitás completar el proceso de verificación."}
       </Typography>
     </Box>
