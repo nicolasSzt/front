@@ -13,7 +13,7 @@ const Verification = () => {
     if (isVerified) {
       setTimeout(() => {
         navigate("/login")
-      }, 4000)
+      }, 2000)
     }
   }
 

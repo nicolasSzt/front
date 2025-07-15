@@ -21,17 +21,17 @@ const handleRegister = ({ formState, setUi, resetForm }) => async () => {
 
     if (res.ok) {
       setUi({
-        successMessage: "¡Cuenta creada exitosamente!",
+        successMessage: "¡Cuenta creada con éxito! Por favor, verifica tu correo electrónico.",
         isLogin: true,
       });
+      
       resetForm();
     } else {
       setUi({ error: res.message });
     }
   } catch (error) {
     setUi({
-      error:
-        error.message || "Ocurrió un error al comunicarse con el servidor",
+      error:  "Ocurrió un error al comunicarse con el servidor",
     });
   } finally {
     setUi({ loading: false });

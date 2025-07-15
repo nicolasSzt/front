@@ -24,10 +24,9 @@ const handleLogin = ({ formState, setUi, navigate }) => async () => {
                 error: "Tu cuenta no ha sido verificada. Revisa tu email para verificarla.",
                 successMessage: "",
             });
-        } else {
+        } else  {
             setUi({
                 error:
-                    error.message ||
                     "Ocurrió un error al comunicarnos con el servidor, intenta más tarde.",
                 successMessage: "",
             });

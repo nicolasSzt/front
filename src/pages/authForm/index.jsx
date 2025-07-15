@@ -25,6 +25,7 @@ const initialFormState = {
 
 const initialUiState = {
     isLogin: true,
+    isRegister: true,
     showPassword: false,
     showConfirmPassword: false,
     loading: false,
@@ -119,9 +120,15 @@ const AuthForm = () => {
     };
 
     const getButtonText = () => {
-        if (uiState.loading) return uiState.isLogin ? "Iniciando..." : "Creando...";
-        return uiState.isLogin ? "Iniciar sesión" : "Registrarse";
+        const { loading, isLogin } = uiState;
+
+        if (loading) {
+            return isLogin ? "Iniciando..." : "Creando...";
+        } else {
+            return isLogin ? "Iniciar sesión" : "Registrarse";
+        }
     };
+
 
     return (
         <Container>
