@@ -8,18 +8,23 @@ const Verification = () => {
   const [searchParams] = useSearchParams()
   const verify_token = searchParams.get("verify_token")
   const { isLoading, isVerified, error, refresh } = useVerify(verify_token)
-  
+
   const handleRedirect = () => {
+    console.log(isVerified)
     if (isVerified) {
       setTimeout(() => {
         navigate("/login")
       }, 4000)
     }
   }
-  
+
   useEffect(() => {
-    handleRedirect()
-  }, [])
+    console.log(isVerified)
+
+    if (isVerified !== undefined) {
+      handleRedirect()
+    }
+  }, [isVerified])
 
   if (isLoading) {
     return (
@@ -50,9 +55,6 @@ const Verification = () => {
           ? "Redirigiendo a tu cuenta..."
           : "Necesitás completar el proceso de verificación."}
       </Typography>
-      <Button variant="contained" sx={{ mt: 3 }}>
-        Continuar
-      </Button>
     </Box>
   )
 }
