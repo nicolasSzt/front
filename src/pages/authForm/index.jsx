@@ -59,6 +59,7 @@ const StyledFormCard = styled(FormCard)`
 const AuthForm = () => {
     const [formState, setFormState] = useState(initialFormState);
     const [uiState, setUiState] = useState(initialUiState);
+    const [isLogin, setIsLogin] = useState(true);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -136,7 +137,7 @@ const AuthForm = () => {
                 elevation={0}
             >
                 <StyledCardContent>
-                    <AuthHeader isLogin={uiState.isLogin} />
+                    <AuthHeader isLogin={isLogin} />
 
                     <AuthAlerts
                         successMessage={uiState.successMessage}
@@ -152,7 +153,6 @@ const AuthForm = () => {
                             isLogin={uiState.isLogin}
                             formState={formState}
                             handleChange={handleChange}
-                            loading={uiState.loading}
                             showPassword={uiState.showPassword}
                             setShowPassword={(value) => setUi({ showPassword: value })}
                             showConfirmPassword={uiState.showConfirmPassword}

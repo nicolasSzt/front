@@ -19,8 +19,7 @@ const Subtitle = styled(Typography)`
 const AuthHeader = ({ isLogin }) => {
     return (
         <HeaderBox>
-            <Title variant="h4">{isLogin ? "Iniciar sesión" : "Crear cuenta"}</Title>
-            <Subtitle>{isLogin ? "Accede a tu cuenta" : "Únete a la plataforma"}</Subtitle>
+            <Title variant="h4">{!isLogin ? "Iniciar sesión" : "Crear cuenta"}</Title>
         </HeaderBox>
     );
 };

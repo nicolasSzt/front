@@ -1,5 +1,6 @@
 import { registerAuth } from "@/services/authServices";
 import { REGISTER_FIELD_NAME } from "@/constans/form/register";
+import errorStatusMessages from "@/constans/manageStatusErorr";
 
 const handleRegister = ({ formState, setUi, resetForm }) => async () => {
   try {
@@ -24,14 +25,14 @@ const handleRegister = ({ formState, setUi, resetForm }) => async () => {
         successMessage: "¡Cuenta creada con éxito! Por favor, verifica tu correo electrónico.",
         isLogin: true,
       });
-      
+
       resetForm();
     } else {
       setUi({ error: res.message });
     }
   } catch (error) {
     setUi({
-      error:  "Ocurrió un error al comunicarse con el servidor",
+      error: errorStatusMessages[error.status],
     });
   } finally {
     setUi({ loading: false });
