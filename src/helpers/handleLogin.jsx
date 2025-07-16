@@ -12,7 +12,9 @@ const handleLogin = ({ formState, setUi, navigate }) => async () => {
         });
 
         if (res.ok) {
-            setUi({ successMessage: "¡Bienvenido de vuelta!", error: "" });
+            setUi({
+                successMessage: "¡Bienvenido de vuelta!"
+            });
             navigate("/workspacesSelector");
         }
     } catch (error) {
