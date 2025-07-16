@@ -4,7 +4,7 @@ import { loginAuth } from "@/services/authServices";
 
 const handleLogin = ({ formState, setUi, navigate }) => async () => {
     try {
-        setUi({ loading: true, error: "", successMessage: "" });
+        setUi(prev => ({ ...prev, loading: true, error: "", successMessage: "" }));
 
         const res = await loginAuth({
             email: formState[REGISTER_FIELD_NAME.EMAIL],
@@ -13,19 +13,15 @@ const handleLogin = ({ formState, setUi, navigate }) => async () => {
         console.log("Respuesta loginAuth:", res);
 
         if (res.ok) {
-            setUi({ successMessage: "¡Bienvenido de vuelta!", error: "" });
+            setUi(prev => ({ ...prev, successMessage: "¡Bienvenido de vuelta!", error: "" }));
             navigate("/workspacesSelector");
         } else {
-            setUi({ error: res.message || "Error desconocido", successMessage: "" });
+            setUi(prev => ({ ...prev, error: res.message || "Error desconocido", successMessage: "" }));
         }
-
     } catch (error) {
-        setUi({
-            error: errorStatusMessages[error.status],
-        });
-
+        setUi(prev => ({ ...prev, error: errorStatusMessages[error.status] || "Error inesperado" }));
     } finally {
-        setUi((prev) => ({ ...prev, loading: false }));
+        setUi(prev => ({ ...prev, loading: false }));
     }
 };
 

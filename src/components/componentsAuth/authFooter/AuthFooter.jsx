@@ -25,7 +25,7 @@ const AuthFooter = (
         loading
     }) => (
     <CenterBox>
-        {isLogin ? (
+        {isLogin ?  (
             <Box>
                 <ToggleText>¿No tienes cuenta?</ToggleText>
                 <ToggleButton
