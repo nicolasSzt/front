@@ -10,7 +10,6 @@ const handleLogin = ({ formState, setUi, navigate }) => async () => {
             email: formState[REGISTER_FIELD_NAME.EMAIL],
             password: formState[REGISTER_FIELD_NAME.PASSWORD],
         });
-        console.log("Respuesta loginAuth:", res);
 
         if (res.ok) {
             setUi({ successMessage: "¡Bienvenido de vuelta!", error: "" });
