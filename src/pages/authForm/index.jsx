@@ -59,7 +59,6 @@ const StyledFormCard = styled(FormCard)`
 const AuthForm = () => {
     const [formState, setFormState] = useState(initialFormState);
     const [uiState, setUiState] = useState(initialUiState);
-    const [isLogin, setIsLogin] = useState(true);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -124,12 +123,14 @@ const AuthForm = () => {
         const { loading, isLogin } = uiState;
 
         if (loading) {
-            return isLogin ? "Iniciando..." : "Creando...";
+            const buttonText = isLogin ? "Iniciando..." : "Creando...";
+            uiState.loading = false;
+
+            return buttonText;
         } else {
             return isLogin ? "Iniciar sesión" : "Registrarse";
         }
     };
-
 
     return (
         <Container>
@@ -137,7 +138,7 @@ const AuthForm = () => {
                 elevation={0}
             >
                 <StyledCardContent>
-                    <AuthHeader isLogin={isLogin} />
+                    <AuthHeader isLogin={uiState.isLogin} />
 
                     <AuthAlerts
                         successMessage={uiState.successMessage}
