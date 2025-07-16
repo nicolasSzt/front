@@ -19,18 +19,24 @@ const handleLogin = ({ formState, setUi, navigate }) => async () => {
         }
 
     } catch (error) {
-        if (error.status === 403) {
-            setUi({
-                error: "Tu cuenta no ha sido verificada. Revisa tu email para verificarla.",
-                successMessage: "",
-            });
-        } else  {
-            setUi({
-                error:
-                    "Ocurrió un error al comunicarnos con el servidor, intenta más tarde.",
-                successMessage: "",
-            });
-        }
+console.error("Error en login:", error);
+
+        const status = error?.response?.status || error?.status;
+        const errorStatusMessages = {
+            400: "La solicitud es inválida. Verificá los datos ingresados.",
+            401: "No estás autorizado. Iniciá sesión para continuar.",
+            403: "Tu cuenta no ha sido verificada. Revisa tu email para verificarla.",
+            404: "Usuario no encontrado. Verifica tus datos.",
+            409: "Ya existe una cuenta con este email.",
+            500: "Error interno del servidor. Intenta más tarde.",
+        };
+console.log("Status detectado:", status);
+
+        setUi({
+            error: errorStatusMessages[status],
+            successMessage: "",
+        });
+
     } finally {
         setUi((prev) => ({ ...prev, loading: false }));
     }
