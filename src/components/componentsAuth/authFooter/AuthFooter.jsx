@@ -17,11 +17,6 @@ padding: 12px 24px;
 font-weight: 600;
 background: white;`;
 
-const SecondaryButton = styled(Button)`
-border-radius: 8px;
-padding: 12px 24px;
-font-weight: 600;
-background: white;`;
 
 const AuthFooter = (
     { isLogin,
@@ -33,14 +28,21 @@ const AuthFooter = (
         {isLogin ? (
             <Box>
                 <ToggleText>¿No tienes cuenta?</ToggleText>
-                <SecondaryButton onClick={toggleToRegister} disabled={loading} fullWidth>
+                <ToggleButton
+                    onClick={toggleToRegister}
+                    disabled={loading}
+                    fullWidth
+                >
                     Crear cuenta
-                </SecondaryButton>
+                </ToggleButton>
             </Box>
         ) : (
             <Box>
                 <ToggleText>¿Ya tienes cuenta?</ToggleText>
-                <ToggleButton onClick={toggleToLogin} disabled={loading}>
+                <ToggleButton
+                    onClick={toggleToLogin}
+                    disabled={loading}
+                >
                     Iniciar sesión
                 </ToggleButton>
             </Box>

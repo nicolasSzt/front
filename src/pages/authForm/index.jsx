@@ -119,6 +119,7 @@ const AuthForm = () => {
         setFormState(initialFormState);
     };
 
+
     const getButtonText = () => {
         const { loading, isLogin } = uiState;
 

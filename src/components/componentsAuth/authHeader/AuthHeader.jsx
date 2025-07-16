@@ -10,16 +10,12 @@ const Title = styled(Typography)`
   margin-bottom: 8px;
   font-size: 28px;
 `;
-const Subtitle = styled(Typography)`
-  color: #6b7280;
-  font-weight: 500;
-  font-size: 15px;
-`;
 
 const AuthHeader = ({ isLogin }) => {
+  console.log("isLogin:", isLogin);
     return (
         <HeaderBox>
-            <Title variant="h4">{!isLogin ? "Iniciar sesión" : "Crear cuenta"}</Title>
+            <Title variant="h4">{isLogin ? "Iniciar sesión" : "Crear cuenta"}</Title>
         </HeaderBox>
     );
 };
