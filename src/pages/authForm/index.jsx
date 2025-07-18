@@ -1,89 +1,115 @@
 import { useState } from "react";
-
-import { Container } from "@/components/styled/formStyled/Container";
-import FormCard from "@/components/styled/formStyled/FormCard";
-import StyledCardContent from "@/components/styled/formStyled/StyledCardContent";
-import AuthHeader from "@/components/componentsAuth/authHeader/AuthHeader";
-import AuthAlerts from "@/components/componentsAuth/authAlert/AuthAlert";
-import FormContainer from "@/components/styled/formStyled/FormContainer";
-import AuthFormFields from "@/components/componentsAuth/authFormFIelds/AuthFormFields";
-import AuthFooter from "@/components/componentsAuth/authFooter/AuthFooter";
-import Divider from "@/components/styled/formStyled/Divider";
-import { Button } from "@mui/material";
-import { REGISTER_FIELD_NAME } from "@/constans/form/register";
-import styled from "@emotion/styled";
-import handleRegister from "@/helpers/handleRegister";
 import { useNavigate } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import {
+    Box,
+    Button,
+    FormControlLabel,
+    Switch,
+    Typography,
+    TextField,
+} from "@mui/material";
+
+import { useTheme } from "@mui/material/styles";
+import handleRegister from "@/helpers/handleRegister";
 import handleLogin from "@/helpers/handleLogin";
+import { REGISTER_FIELD_NAME } from "@/constans/form/register";
+import ThemeToggle from "@/components/themeToggle";
+import { AuthAlerts } from "@/components/componentsAuth";
 
-const initialFormState = {
-    [REGISTER_FIELD_NAME.NAME]: "",
-    [REGISTER_FIELD_NAME.EMAIL]: "",
-    [REGISTER_FIELD_NAME.PASSWORD]: "",
-    [REGISTER_FIELD_NAME.CONFIRM_PASSWORD]: "",
-};
+const MainContainer = styled(Box)(({ theme }) => ({
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background:
+        theme.palette.mode === "dark"
+            ? "linear-gradient(135deg, #0f172a 0%, #334155 100%)"
+            : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)",
+    transition: "background 0.5s ease",
+    padding: theme.spacing(2),
+}));
 
-const initialUiState = {
-    isLogin: true,
-    isRegister: true,
-    showPassword: false,
-    showConfirmPassword: false,
-    loading: false,
-    error: "",
-    successMessage: "",
-};
+const AuthCard = styled(Box)(({ theme }) => ({
+    backgroundColor:
+        theme.palette.mode === "dark" ? "#1E1E1E" : "#fff",
+    color: theme.palette.text.primary,
+    padding: theme.spacing(4),
+    borderRadius: 16,
+    width: "100%",
+    maxWidth: 420,
+    boxShadow:
+        theme.palette.mode === "dark"
+            ? "0 8px 24px rgba(255, 255, 255, 0.1)"
+            : "0 8px 24px rgba(0, 0, 0, 0.1)",
+}));
 
-const StyledButton = styled(Button)`
-  margin-top: 16px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  border-radius: 7px;
-  text-transform: none;
-  font-weight: 600;
-  width: 100%;
+const Title = styled(Typography)`
+  font-weight: 700;
+  font-size: 1.75rem;
+  text-align: center;
 `;
 
-const StyledFormCard = styled(FormCard)`
-  width: 100%;
-  max-width: 500px;
-  padding: 16px;
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  background-color: white;
-
-  @media (min-width: 600px) {
-    padding: 32px;
-  }
-`;
+const StyledButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(1.5),
+    borderRadius: 8,
+    fontWeight: 600,
+    textTransform: "none",
+    backgroundColor:
+        theme.palette.mode === "dark" ? "#1363b4ff" : undefined,
+    color:
+        theme.palette.mode === "dark" ? "#ffffffff" : "#000000ff",
+    "&:hover": {
+        backgroundColor:
+            theme.palette.mode === "dark" ? "#0c4b8aff" : undefined,
+    },
+}));
 
 const AuthForm = () => {
-    const [formState, setFormState] = useState(initialFormState);
-    const [uiState, setUiState] = useState(initialUiState);
+    const theme = useTheme();
+    const [formState, setFormState] = useState({
+        [REGISTER_FIELD_NAME.NAME]: "",
+        [REGISTER_FIELD_NAME.EMAIL]: "",
+        [REGISTER_FIELD_NAME.PASSWORD]: "",
+        [REGISTER_FIELD_NAME.CONFIRM_PASSWORD]: "",
+    });
+
+    const [uiState, setUiState] = useState({
+        isLogin: true,
+        showPassword: false,
+        showConfirmPassword: false,
+        loading: false,
+        error: "",
+        successMessage: "",
+    });
 
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormState((prev) => ({ ...prev, [name]: value }));
-        if (uiState.error) {
-            setUiState((prev) => ({ ...prev, error: "" }));
-        }
+        if (uiState.error) setUiState((prev) => ({ ...prev, error: "" }));
     };
 
-    const setUi = (updates) => {
-        setUiState((prev) => ({ ...prev, ...updates }));
-    };
+    const setUi = (updates) => setUiState((prev) => ({ ...prev, ...updates }));
 
     const handleLoginSubmit = handleLogin({
         formState,
         setUi,
-        navigate
+        navigate,
     });
 
     const handleRegisterSubmit = handleRegister({
         formState,
         setUi,
-        resetForm: () => setFormState(initialFormState),
+        resetForm: () =>
+            setFormState({
+                [REGISTER_FIELD_NAME.NAME]: "",
+                [REGISTER_FIELD_NAME.EMAIL]: "",
+                [REGISTER_FIELD_NAME.PASSWORD]: "",
+                [REGISTER_FIELD_NAME.CONFIRM_PASSWORD]: "",
+            }),
     });
 
     const handleSubmit = async (e) => {
@@ -102,84 +128,169 @@ const AuthForm = () => {
         formState[REGISTER_FIELD_NAME.PASSWORD] !==
         formState[REGISTER_FIELD_NAME.CONFIRM_PASSWORD];
 
-    const toggleToRegister = () => {
-        setUi({
-            isLogin: false,
-            error: "",
-            successMessage: "",
+    const toggleAuthMode = (isLogin) => {
+        setUi({ isLogin });
+        setFormState({
+            [REGISTER_FIELD_NAME.NAME]: "",
+            [REGISTER_FIELD_NAME.EMAIL]: "",
+            [REGISTER_FIELD_NAME.PASSWORD]: "",
+            [REGISTER_FIELD_NAME.CONFIRM_PASSWORD]: "",
         });
-        setFormState(initialFormState);
     };
 
-    const toggleToLogin = () => {
-        setUi({
-            isLogin: true,
-            error: "",
-            successMessage: "",
-        });
-        setFormState(initialFormState);
-    };
-
-
-    const getButtonText = () => {
-        if (uiState.loading) {
-            return uiState.isLogin ? "Iniciando..." : "Creando...";
-        } else {
-            return uiState.isLogin ? "Iniciar sesión" : "Registrarse";
-        }
-    };
     return (
-        <Container>
-            <StyledFormCard
-                elevation={0}
-            >
-                <StyledCardContent>
-                    <AuthHeader isLogin={uiState.isLogin} />
+        <MainContainer>
+            <AuthCard>
+                <Box display="flex" justifyContent="space-between" alignItems={"center"} mb={2}>
+                    <Title variant="h1">{uiState.isLogin ? "Iniciar sesión" : "Registrarse"}</Title>
+                    <ThemeToggle
+                        toggleTheme={() => setDarkMode(!darkMode)}
+                    />
+                </Box>
 
-                    <AuthAlerts
-                        successMessage={uiState.successMessage}
-                        error={uiState.error}
+                <AuthAlerts
+                    successMessage={uiState.successMessage}
+                    error={uiState.error}
+                />
+
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit}
+                    autoComplete="off"
+                    display="flex"
+                    flexDirection="column"
+                    gap={2}
+                >
+                    {!uiState.isLogin && (
+                        <TextField
+                            label="Nombre"
+                            name={REGISTER_FIELD_NAME.NAME}
+                            value={formState[REGISTER_FIELD_NAME.NAME]}
+                            onChange={handleChange}
+                            fullWidth
+                            variant="outlined"
+                            autoComplete="name"
+                            required
+                        />
+                    )}
+
+                    <TextField
+                        label="Email"
+                        name={REGISTER_FIELD_NAME.EMAIL}
+                        type="email"
+                        value={formState[REGISTER_FIELD_NAME.EMAIL]}
+                        onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        autoComplete="email"
+                        required
                     />
 
-                    <FormContainer
-                        component="form"
-                        onSubmit={(e) => handleSubmit(e)}
-                        autoComplete="off"
-                    >
-                        <AuthFormFields
-                            isLogin={uiState.isLogin}
-                            formState={formState}
-                            handleChange={handleChange}
-                            showPassword={uiState.showPassword}
-                            setShowPassword={(value) => setUi({ showPassword: value })}
-                            showConfirmPassword={uiState.showConfirmPassword}
-                            setShowConfirmPassword={(value) =>
-                                setUi({ showConfirmPassword: value })
+                    <TextField
+                        label="Contraseña"
+                        name={REGISTER_FIELD_NAME.PASSWORD}
+                        type={uiState.showPassword ? "text" : "password"}
+                        value={formState[REGISTER_FIELD_NAME.PASSWORD]}
+                        onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        autoComplete="current-password"
+                        required
+                        error={passwordMismatch}
+                        helperText={passwordMismatch ? "Las contraseñas no coinciden" : ""}
+                    />
+
+                    {!uiState.isLogin && (
+                        <TextField
+                            label="Confirmar contraseña"
+                            name={REGISTER_FIELD_NAME.CONFIRM_PASSWORD}
+                            type={uiState.showConfirmPassword ? "text" : "password"}
+                            value={formState[REGISTER_FIELD_NAME.CONFIRM_PASSWORD]}
+                            onChange={handleChange}
+                            fullWidth
+                            variant="outlined"
+                            autoComplete="new-password"
+                            required
+                            error={passwordMismatch}
+                            helperText={passwordMismatch ? "Las contraseñas no coinciden" : ""}
+                        />
+                    )}
+
+                    <Box display="flex" justifyContent="space-between" mt={1}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={uiState.showPassword}
+                                    onChange={() => setUi({ showPassword: !uiState.showPassword })}
+                                />
                             }
-                            passwordMismatch={passwordMismatch}
+                            label="Mostrar contraseña"
                         />
 
-                        <StyledButton
-                            type="submit"
-                            fullWidth
-                            disabled={uiState.loading}
-                            variant="contained"
-                        >
-                            {getButtonText()}
-                        </StyledButton>
-                    </FormContainer>
+                        {!uiState.isLogin && (
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={uiState.showConfirmPassword}
+                                        onChange={() =>
+                                            setUi({ showConfirmPassword: !uiState.showConfirmPassword })
+                                        }
+                                    />
+                                }
+                                label="Mostrar confirmar contraseña"
+                            />
+                        )}
+                    </Box>
 
-                    <Divider />
+                    <StyledButton
+                        type="submit"
+                        variant="contained"
+                        disabled={uiState.loading || passwordMismatch}
+                        fullWidth
+                    >
+                        {uiState.loading
+                            ? uiState.isLogin
+                                ? "Iniciando..."
+                                : "Creando..."
+                            : uiState.isLogin
+                                ? "Iniciar sesión"
+                                : "Registrarse"}
+                    </StyledButton>
+                </Box>
 
-                    <AuthFooter
-                        isLogin={uiState.isLogin}
-                        toggleToRegister={toggleToRegister}
-                        toggleToLogin={toggleToLogin}
-                        loading={uiState.loading}
-                    />
-                </StyledCardContent>
-            </StyledFormCard>
-        </Container>
+                <Box
+                    mt={3}
+                    display="flex"
+                    justifyContent="center"
+                    gap={2}
+                    flexWrap="wrap"
+                    fontSize="0.9rem"
+                    color={theme.palette.text.secondary}
+                >
+                    {uiState.isLogin ? (
+                        <>
+                            <Typography
+                                component="span"
+                                sx={{ cursor: "pointer", color: theme.palette.primary.main }}
+                                onClick={() => toggleAuthMode(false)}
+                            >
+                                ¿No tienes cuenta? Regístrate
+                            </Typography>
+                        </>
+                    ) : (
+                        <>
+                            <Typography
+                                component="span"
+                                sx={{ cursor: "pointer", color: theme.palette.primary.main }}
+                                onClick={() => toggleAuthMode(true)}
+                            >
+                                ¿Ya tienes cuenta? Inicia sesión
+                            </Typography>
+                        </>
+                    )}
+                </Box>
+            </AuthCard>
+        </MainContainer>
     );
 };
 

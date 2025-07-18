@@ -6,7 +6,7 @@ import useMemberInformation from "@/hooks/useMemerInformation";
 import { Navigate } from "react-router-dom";
 import useWorkspaceManager from "@/hooks/useWorkspaceWithChannels";
 
-const WorkspaceSelector = () => {
+const WorkspaceSelector = ({darkMode, setDarkMode}) => {
     const {
         workspaces,
         isLoading,

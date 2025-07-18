@@ -1,29 +1,5 @@
 import styled from "@emotion/styled";
 
-export const MainTitle = styled.h3`
-  font-weight: bold;
-  color: #1a202c;
-  margin-bottom: 16px;
-  text-align: center;
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
-`;
-
-export const Subtitle = styled.h2`
-  font-size: 1.25rem;
-  color: #718096;
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto 48px;
-  line-height: 1.6;
-
-  @media (max-width: 768px) {
-    font-size: 1.1rem;
-  }
-`;
-
 export const WorkspaceTitle = styled.h3`
   font-size: 1.25rem;
   font-weight: 600;
@@ -40,13 +16,13 @@ export const WorkspaceDescription = styled.p`
 export const CreateTitle = styled.h3`
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a202c;
+  color: #000000ff;
   margin-bottom: 16px;
 `;
 
 export const CreateDescription = styled.p`
   font-size: 0.875rem;
-  color: #718096;
+  color: #36373aff;
   text-align: center;
   max-width: 400px;
   margin-bottom: 24px;

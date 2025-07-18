@@ -3,19 +3,27 @@ import { Box, Button, Typography, styled } from "@mui/material";
 const CenterBox = styled(Box)`
 text-align:
 center; 
- `;
+`;
 
 const ToggleText = styled(Typography)`
 color: #6b7280;
 font-size: 14px;
 margin-bottom: 16px;
-font-weight: 500;`;
+font-weight: 500;
+`;
 
-const ToggleButton = styled(Button)`
+const ToggleButton = styled(Box)`
 border-radius: 8px;
 padding: 12px 24px;
+color: #1a202c;
+cursor: pointer;
 font-weight: 600;
-background: white;`;
+background: white;
+
+&:hover {
+    background: #f3f4f6;
+}
+`;
 
 
 const AuthFooter = (
@@ -25,7 +33,7 @@ const AuthFooter = (
         loading
     }) => (
     <CenterBox>
-        {isLogin ?  (
+        {isLogin ? (
             <Box>
                 <ToggleText>¿No tienes cuenta?</ToggleText>
                 <ToggleButton

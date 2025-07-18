@@ -1,8 +1,11 @@
-import { styled } from "@mui/material";
-import { Divider } from "@mui/material";
+import { styled, Divider } from "@mui/material";
 
-const DividerStyled = styled(Divider)`
-  margin: 24px 0;
-`;
+const DividerStyled = styled(Divider)(({ theme }) => ({
+  margin: "24px 0",
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? theme.palette.divider 
+      : undefined,
+}));
 
 export default DividerStyled;

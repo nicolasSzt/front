@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import Sidebar from "@/components/sidebar";
-import Chat from "@/components/ChatArea";
-import { useTheme } from "@mui/material/styles";
-import { CircularProgress, Typography, Box, AppBar, Toolbar, IconButton } from "@mui/material";
+import Chat from "@/components/chat";
+import {
+  CircularProgress,
+  Typography,
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useParams, useNavigate } from "react-router-dom";
 import { useWorkspaceChannels } from "@/hooks/useWorkspaceChannels";
 import useWorkspacesWithChannels from "@/hooks/useWorkspaceWithChannels";
 import { createChannel } from "@/services/channelService";
+import ThemeToggle from "@/components/themeToggle";
 
 const drawerWidth = 280;
 
@@ -16,31 +25,38 @@ const MainContainer = styled(Box)`
   display: flex;
 `;
 
-const MobileAppBar = styled(AppBar)`
-  display: block;
-  background-color: white;
-  color: #111827;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid #ffffff;
-  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+const MobileAppBar = styled(AppBar)(({ theme }) => ({
+  display: "block",
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 1px 3px rgba(255, 255, 255, 0.1), 0 8px 24px rgba(255, 255, 255, 0.15)"
+      : "0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06)",
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  zIndex: theme.zIndex.drawer + 1,
+  "@media (min-width:900px)": {
+    display: "none",
+  },
+}));
 
-  @media (min-width: 900px) {
-    display: none;
-  }
+const StyledToolbar = styled(Toolbar)`
+  display: flex;
+  justify-content: space-between;
 `;
 
-const MainContent = styled(Box)`
-  flex-grow: 1;
-  padding: ${({ theme }) => theme.spacing(3)};
-  margin-top: 64px;
-  background-color: ${({ theme }) => theme.palette.background.default};
-  min-height: 100vh;
-
-  @media (min-width: 900px) {
-    margin-left: ${drawerWidth}px;  /* Aquí dejamos espacio para el sidebar */
-    margin-top: 0;
-  }
-`;
+const MainContent = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(3),
+  marginTop: 64,
+  backgroundColor: theme.palette.background.default,
+  minHeight: "100vh",
+  boxSizing: "border-box",
+  "@media (min-width:900px)": {
+    marginLeft: drawerWidth,
+    marginTop: 0,
+  },
+}));
 
 const LoadingContainer = styled(Box)`
   display: flex;
@@ -59,15 +75,15 @@ const ErrorContainer = styled(Box)`
 
 const WorkspaceDetail = () => {
   const { workspace_id } = useParams();
-  const { workspaces } = useWorkspacesWithChannels();
-
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [newChannelName, setNewChannelName] = useState("");
-  const [newChannelDescription, setNewChannelDescription] = useState("");
-  const [channelNameError, setChannelNameError] = useState("");
-  const [channelSearchTerm, setChannelSearchTerm] = useState("");
   const navigate = useNavigate();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const { workspaces } = useWorkspacesWithChannels();
+  const currentWorkspace = workspaces.find(
+    (ws) => ws._id === workspace_id
+  );
 
   const {
     channels,
@@ -78,14 +94,16 @@ const WorkspaceDetail = () => {
     error,
   } = useWorkspaceChannels(workspace_id);
 
-  const currentWorkspace = workspaces.find(
-    (workspace) => workspace._id === workspace_id
-  );
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [newChannelName, setNewChannelName] = useState("");
+  const [newChannelDescription, setNewChannelDescription] = useState("");
+  const [channelNameError, setChannelNameError] = useState("");
+  const [channelSearchTerm, setChannelSearchTerm] = useState("");
 
-  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   const handleOpenModal = () => setOpenModal(true);
-
   const handleCloseModal = () => {
     setOpenModal(false);
     setNewChannelName("");
@@ -106,7 +124,9 @@ const WorkspaceDetail = () => {
       (ch) => ch.title.toLowerCase() === value.toLowerCase()
     );
 
-    setChannelNameError(exists ? "Ya existe un canal con este nombre." : "");
+    setChannelNameError(
+      exists ? "Ya existe un canal con este nombre." : ""
+    );
   };
 
   const handleCreateChannel = async () => {
@@ -117,7 +137,7 @@ const WorkspaceDetail = () => {
         workspace_id
       );
       handleCloseModal();
-      navigate(0);
+      navigate(0); // reload
     } catch (err) {
       console.error("Error al crear canal:", err);
     }
@@ -147,7 +167,7 @@ const WorkspaceDetail = () => {
   return (
     <MainContainer>
       <MobileAppBar position="fixed">
-        <Toolbar>
+        <StyledToolbar>
           <IconButton
             color="inherit"
             aria-label="abrir menú"
@@ -157,21 +177,26 @@ const WorkspaceDetail = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            {selectedChannel ? `#${selectedChannel}` : "Selecciona un canal"}
+
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1, ml: 2 }}>
+            {selectedChannel
+              ? channels.find((ch) => ch._id === selectedChannel)?.title
+              : "Selecciona un canal"}
           </Typography>
-        </Toolbar>
+
+          <ThemeToggle />
+        </StyledToolbar>
       </MobileAppBar>
 
       <Sidebar
         channels={channels}
         selectedChannel={selectedChannel}
         onChannelSelect={handleChannelSelect}
-        mobileOpen={mobileOpen}
         onMobileToggle={handleDrawerToggle}
         currentWorkspace={currentWorkspace}
         onCreateChannel={handleCreateChannel}
         workspace_id={workspace_id}
+        mobileOpen={mobileOpen}
         openModal={openModal}
         onOpenModal={handleOpenModal}
         onCloseModal={handleCloseModal}
@@ -183,11 +208,17 @@ const WorkspaceDetail = () => {
         handleChangeWithValidation={handleChangeWithValidation}
         searchTerm={channelSearchTerm}
         onSearchChange={setChannelSearchTerm}
+        isMobile={isMobile}
       />
 
       <MainContent>
         {selectedChannel ? (
-          <Chat workspaceId={workspace_id} channelId={selectedChannel} />
+          <Chat
+            workspaceId={workspace_id}
+            channelId={selectedChannel}
+            currentUserId={currentWorkspace?.user_id}
+            isMobile={isMobile}
+          />
         ) : (
           <Typography variant="h5" color="text.secondary">
             Selecciona un canal para comenzar a chatear

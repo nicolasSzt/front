@@ -1,14 +1,20 @@
-import React from 'react';
-import { Email, Lock, Person, Visibility, VisibilityOff } from '@mui/icons-material';
 import { InputAdornment } from '@mui/material';
-import StyledTextField from '@/components/styled/formStyled/StyledTextField';
-import IconStyled from '@/components/styled/formStyled/IconStyled';
-import StyledIconButton from '@/components/styled/formStyled/styledIconButton';
-import ForgotPasswordBox from '@/components/styled/formStyled/ForgotPasswordBox';
-import { ForgotPasswordLink } from '@/components/styled/formStyled/ForgotPasswordLink';
 import { REGISTER_FIELD_NAME } from '@/constans/form/register';
 import { LOGIN_FIELD_NAME } from '@/constans/form/login';
-
+import {
+  IconStyled,
+  StyledIconButton,
+  StyledTextField,
+  ForgotPasswordLink,
+  ForgotPasswordBox,
+} from "@/components/styled/formStyled";
+import {
+  Email,
+  Lock,
+  Person,
+  Visibility,
+  VisibilityOff
+} from '@mui/icons-material';
 const AuthFormFields = ({
   isLogin,
   formState,
@@ -85,7 +91,6 @@ const AuthFormFields = ({
       type={withToggle && !showValue ? "password" : type}
       value={value}
       onChange={handleChange}
-      disabled={loading}
       required
       error={Boolean(error)}
       helperText={helperText}

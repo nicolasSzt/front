@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 
-export const ForgotPasswordLink = styled(Link)`
-  font-size: 0.875rem;
-  color: #1976d2;
-  text-decoration: none;
+const ForgotPasswordLink = styled(Link)(({ theme }) => ({
+  fontSize: "0.875rem",
+  color: theme.palette.mode === "dark" ? "#90caf9" : "#1976d2",
+  textDecoration: "none",
+  "&:hover": {
+    textDecoration: "underline",
+  },
+}));
 
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+export default ForgotPasswordLink;

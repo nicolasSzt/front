@@ -48,7 +48,7 @@ export const WORKSPACE_DATA = [
 ]
 
 export const WORKSPACE_SELECTOR_TEXTS = {
-  title: "Seleccionar espacio de trabajo",
+  title: "Mis Workspaces",
   subtitle: "Select a workspace to continue or create a new one to get started with your team collaboration.",
   createNew: "Crear nuevo espacio de trabajo",
   createNewDescription:

@@ -1,61 +1,44 @@
-import React from "react";
-import styled from "@emotion/styled";
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    Box,
-    IconButton,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+"use client"
+import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Fade } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import { Close } from "@mui/icons-material"
 
-const DialogTitleStyled = styled(DialogTitle)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: ${({ theme }) => theme.spacing(2)};
-`;
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-paper": {
+    borderRadius: theme.spacing(2),
+    minWidth: "400px",
+    maxWidth: "500px",
+  },
+}))
 
-const DialogContentStyled = styled(DialogContent)`
-  padding: ${({ theme }) => theme.spacing(2)};
-`;
+const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  paddingBottom: theme.spacing(1),
+}))
 
-const DialogActionsStyled = styled(DialogActions)`
-  padding: ${({ theme }) => theme.spacing(1, 2)};
-`;
+const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
+  paddingBottom: theme.spacing(2),
+}))
 
-const CloseButton = styled(IconButton)`
-  color: ${({ theme }) => theme.palette.grey[500]};
-`;
+const Modal = ({ open, onClose, title, children, actions }) => {
+  return (
+    <StyledDialog open={open} onClose={onClose} TransitionComponent={Fade} transitionDuration={300}>
+      <StyledDialogTitle>
+        <Typography variant="h6" component="h2">
+          {title}
+        </Typography>
+        <IconButton aria-label="close" onClick={onClose} size="small">
+          <Close />
+        </IconButton>
+      </StyledDialogTitle>
+      <DialogContent>{children}</DialogContent>
+      {actions && <StyledDialogActions>{actions}</StyledDialogActions>}
+    </StyledDialog>
+  )
+}
 
-const Modal = ({
-    open,
-    onClose,
-    title,
-    children,
-    actions,
-    maxWidth = "sm",
-    fullWidth = true,
-    showCloseButton = true,
-}) => {
-    return (
-        <Dialog open={open} onClose={onClose} maxWidth={maxWidth} fullWidth={fullWidth}>
-            <DialogTitleStyled>
-                {title}
-                {showCloseButton && (
-                    <CloseButton aria-label="close" onClick={onClose} size="small">
-                        <CloseIcon />
-                    </CloseButton>
-                )}
-            </DialogTitleStyled>
-
-            <DialogContentStyled>{children}</DialogContentStyled>
-
-            {actions && <DialogActionsStyled>{actions}</DialogActionsStyled>}
-        </Dialog>
-    );
-};
-
-export default Modal;
+export default Modal

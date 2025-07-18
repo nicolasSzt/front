@@ -1,10 +1,12 @@
 import { CardContent, styled } from "@mui/material";
 
-const StyledCardContent = styled(CardContent)`
-  padding: 0 !important;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
+const StyledCardContent = styled(CardContent)(({ theme }) => ({
+  padding: 0,
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+  backgroundColor: theme.palette.mode === "dark" ? "#1e1e1e" : "transparent",
+  color: theme.palette.text.primary,
+}));
 
 export default StyledCardContent;

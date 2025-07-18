@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import styled from "@emotion/styled";
 import {
   Drawer,
@@ -13,8 +13,6 @@ import {
   TextField,
   InputAdornment,
   Button,
-  useTheme,
-  useMediaQuery,
 } from "@mui/material";
 import {
   Tag as HashIcon,
@@ -27,6 +25,7 @@ import {
 } from "@mui/icons-material";
 import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
 import Modal from "@/components/modal";
+import ThemeToggle from "./themeToggle";
 
 const drawerWidth = 280;
 
@@ -139,26 +138,24 @@ const ModalContent = styled.div`
 const Sidebar = ({
   channels = [],
   selectedChannel = null,
-  onChannelSelect = () => {},
+  onChannelSelect = () => { },
   mobileOpen = false,
-  onMobileToggle = () => {},
+  onMobileToggle = () => { },
   currentWorkspace = null,
   openModal = false,
-  onOpenModal = () => {},
-  onCloseModal = () => {},
+  isMobile = false,
+  onOpenModal = () => { },
+  onCloseModal = () => { },
   newChannelName = "",
   newChannelDescription = "",
-  setNewChannelDescription = () => {},
+  setNewChannelDescription = () => { },
   channelNameError = "",
-  handleChangeWithValidation = () => {},
+  handleChangeWithValidation = () => { },
   searchTerm = "",
-  onSearchChange = () => {},
-  onCreateChannel = () => {},
+  onSearchChange = () => { },
+  onCreateChannel = () => { },
 }) => {
-  const [channelsExpanded, setChannelsExpanded] = React.useState(true);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [channelsExpanded, setChannelsExpanded] = useState(true);
 
   const filteredChannels = channels.filter((channel) =>
     channel.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -172,15 +169,15 @@ const Sidebar = ({
         title="Crear un nuevo canal"
         actions={
           <>
-            <Button onClick={onCloseModal} color="secondary">
+            <Button onClick={onCloseModal} color="error">
               Cancelar
             </Button>
             <Button
               onClick={onCreateChannel}
               variant="contained"
+              color="primary"
               disabled={
-                !newChannelName.trim() ||
-                !newChannelDescription.trim()
+                !newChannelName.trim() || !newChannelDescription.trim()
               }
             >
               Crear
@@ -208,7 +205,7 @@ const Sidebar = ({
 
       {isMobile && (
         <CloseButtonContainer>
-          <IconButton onClick={onMobileToggle} size="small">
+          <IconButton size="small" onClick={onMobileToggle}>
             <CloseIcon />
           </IconButton>
         </CloseButtonContainer>
@@ -221,20 +218,24 @@ const Sidebar = ({
         />
 
         <SearchContainer>
-          <StyledTextField
-            fullWidth
-            size="small"
-            placeholder="Buscar canales"
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <Box sx={{ display: "flex", alignItems: "center" , justifyContent: "space-between",gap: 2}}>
+
+            <StyledTextField
+              fullWidth
+              size="small"
+              placeholder="Buscar canales"
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ mr: 1 }}>
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <ThemeToggle />
+          </Box>
         </SearchContainer>
 
         <NavigationContainer>
@@ -313,7 +314,7 @@ const Sidebar = ({
         {drawerContent}
       </MobileDrawer>
 
-      <DesktopDrawer variant="permanent" open>
+      <DesktopDrawer variant="permanent">
         {drawerContent}
       </DesktopDrawer>
     </>

@@ -1,15 +1,19 @@
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 
-export const Container = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; 
-  padding: 16px;
+const Container = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  minHeight: "100vh",
+  padding: 16,
+  backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#fff", 
+  color: theme.palette.text.primary,
 
-  & > * {
-    width: 100%;
-    max-width: 500px;
-  }
-`;
+  "& > *": {
+    width: "100%",
+    maxWidth: 500,
+  },
+}));
+
+export default Container;

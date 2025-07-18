@@ -1,14 +1,17 @@
-import { styled } from "@mui/material";
-import { Paper } from "@mui/material";
+import { styled, Paper } from "@mui/material";
 
-const FormCard = styled(Paper)`
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  box-sizing: border-box;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
-  background-color: #fff;
-`;
+const FormCard = styled(Paper)(({ theme }) => ({
+  width: "100%",
+  maxWidth: 420,
+  padding: 24,
+  boxSizing: "border-box",
+  borderRadius: 8,
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 4px 12px rgba(255 255 255 / 0.1)" 
+      : "0 4px 12px rgba(0 0 0 / 0.1)",      
+  backgroundColor: theme.palette.mode === "dark" ? "#1e1e1e" : "#fff",
+  color: theme.palette.text.primary,
+}));
 
 export default FormCard;

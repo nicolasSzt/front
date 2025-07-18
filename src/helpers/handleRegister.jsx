@@ -4,7 +4,7 @@ import errorStatusMessages from "@/constans/manageStatusErorr";
 
 const handleRegister = ({ formState, setUi, resetForm }) => async () => {
   try {
-    setUi({ loading: true, error: "" });
+    setUi({ loading: true });
 
     if (
       formState[REGISTER_FIELD_NAME.PASSWORD] !==
