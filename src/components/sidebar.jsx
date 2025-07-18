@@ -211,6 +211,7 @@ const Sidebar = ({
         </CloseButtonContainer>
       )}
 
+
       <SidebarContainer>
         <WorkspaceHeader
           title={currentWorkspace?.title || ""}
@@ -218,7 +219,12 @@ const Sidebar = ({
         />
 
         <SearchContainer>
-          <Box sx={{ display: "flex", alignItems: "center" , justifyContent: "space-between",gap: 2}}>
+          <Box sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 2
+          }}>
 
             <StyledTextField
               fullWidth
@@ -234,7 +240,9 @@ const Sidebar = ({
                 ),
               }}
             />
-            <ThemeToggle />
+            {!isMobile && (
+              <ThemeToggle />
+            )}
           </Box>
         </SearchContainer>
 
