@@ -12,13 +12,10 @@ const kyClient = () => {
   });
 };
 
-export const getAllUserInformation = async () => {
+export const getUserInformation = async () => {
   try {
     const response = await kyClient().get(`users`).json();
-    console.log("Respuesta API users:", response);
-    return {
-      users: response.data.users,
-    };
+    return response.data.users;
   } catch (error) {
     console.error("Error fetching user info:", error);
     throw error;

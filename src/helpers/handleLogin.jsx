@@ -4,7 +4,7 @@ import { loginAuth } from "@/services/authServices";
 
 const handleLogin = ({ formState, setUi, navigate }) => async () => {
     try {
-        setUi({ loading: true });
+        setUi({ loading: true,  error: "" });
 
         const res = await loginAuth({
             email: formState[REGISTER_FIELD_NAME.EMAIL],

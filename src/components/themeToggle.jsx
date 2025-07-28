@@ -7,6 +7,7 @@ const StyledToggle = styled(IconButton)(({ theme }) => ({
     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
     "&:hover": {
         transform: "scale(1.1)",
         backgroundColor: theme.palette.action.hover,

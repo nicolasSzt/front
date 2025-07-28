@@ -10,8 +10,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-
-import ThemeToggle from "./themeToggle";
 import { getAllMessagesByChannel, createMessage } from "@/services/messageService";
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -22,21 +20,18 @@ const MainContainer = styled(Box)(({ theme }) => ({
   flexDirection: "column",
 }));
 
-
 const Content = styled(Box)`
   flex: 1;
   display: flex;
   width: 100%;
   flex-direction: column;
   gap: 24px;
-  margin-bottom: 24px;
-  `;
+`;
 
 const InputWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   gap: 8,
   padding: 16,
-  borderRadius: "0 0 8px 8px",
   backgroundColor: theme.palette.background.paper,
 }));
 const MessagesName = styled(Box)(({ theme }) => ({
@@ -48,8 +43,7 @@ const MessagesName = styled(Box)(({ theme }) => ({
 const StyledTextField = styled(TextField)(({ theme }) => ({
   flex: 1,
   "& .MuiInputBase-root": {
-    backgroundColor:
-      theme.palette.mode === "dark" ? theme.palette.background.default : "#fff",
+    backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.primary,
   },
 }));
@@ -111,7 +105,7 @@ const OtherMessage = styled(MessageBox)(({ theme }) => ({
 }));
 
 
-const Chat = ({ workspaceId, channelId, currentUserId }) => {
+const Chat = ({ workspaceId, channelId }) => {
   const queryClient = useQueryClient();
   const [newMessage, setNewMessage] = useState("");
 
@@ -172,7 +166,7 @@ const Chat = ({ workspaceId, channelId, currentUserId }) => {
         ) : (
           <Paper
             elevation={5}
-            sx={{ padding: 2, flex: 1, display: "flex", flexDirection: "column" }}
+            sx={{ padding: 2, flex: 1, display: "flex", flexDirection: "column", borderRadius: "0" }}
           >
             <MessagesContainer>
               {messages.map((msg) => {

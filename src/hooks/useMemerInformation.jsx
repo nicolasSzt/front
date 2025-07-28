@@ -5,25 +5,30 @@ import { getAllMemberInformation } from "@/services/memberService";
 const useMemberInformation = () => {
   const { workspaces, isLoading: isWorkspacesLoading } = useWorkspacesWithChannels();
 
-  const membersQueries = useQueries({
+  const memberId = useQueries({
     queries: workspaces.map((workspace) => ({
       queryKey: ["members", workspace._id],
       queryFn: async () => {
         const { members } = await getAllMemberInformation(workspace._id);
-        return members;
+        const userId = members[0]?.user_id;
+        return {
+          members,
+          userId
+        };
       },
-      enabled: !!workspace._id,
       refetchOnWindowFocus: false,
     })),
   });
 
-  const membersByWorkspace = membersQueries.map((query, index) => {
+  const membersByWorkspace = memberId.map((query, index) => {
     const workspaceId = workspaces?.[index]?._id;
+    const members = query.data?.members || [];
 
     return {
       workspaceId,
-      members: query.data || [],
-      membersCount: (query.data || []).length, 
+      members,
+      membersCount: members.length,
+      userId: query.data?.userId,
       isLoading: query.isLoading,
       isError: query.isError,
     };
@@ -31,7 +36,7 @@ const useMemberInformation = () => {
 
   return {
     membersByWorkspace,
-    isLoading: isWorkspacesLoading || membersQueries.some((q) => q.isLoading),
+    isLoading: isWorkspacesLoading || memberId.some((q) => q.isLoading),
   };
 };
 

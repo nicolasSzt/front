@@ -6,6 +6,7 @@ import Modal from "@/components/modal"
 import CreateWorkspaceCard from "../createWorkspaceCard/CreateWorkspaceCard"
 import { WorkspaceCard } from ".."
 import { useTheme } from "@/components/themeProvider"
+import { useNavigate } from "react-router-dom"
 
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -80,7 +81,6 @@ const LoadingContainer = styled(Box)(({ theme }) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    justifyContent: "center",
     minHeight: "50vh",
     gap: theme.spacing(2),
     [theme.breakpoints.up("md")]: {
@@ -155,6 +155,7 @@ const WorkspaceSelectorLayout = ({
     texts,
 }) => {
     const { darkMode, toggleTheme, setDarkMode } = useTheme()
+    const navigate = useNavigate()
     const renderWorkspaceCards = () => {
         if (!workspaces?.length) {
             return (
@@ -201,20 +202,8 @@ const WorkspaceSelectorLayout = ({
                 </StyledContainer>
             </MainContainer>
         )
-    }
-
-    if (isError) {
-        return (
-            <MainContainer>
-                <StyledContainer>
-                    <LoadingContainer>
-                        <Typography color="error" variant="h6">
-                            Error al obtener datos: {error?.message || "Error desconocido"}
-                        </Typography>
-                    </LoadingContainer>
-                </StyledContainer>
-            </MainContainer>
-        )
+    } else if (localStorage.getItem("authorization_token") === null) {
+        navigate("/login");
     }
 
     return (
@@ -240,7 +229,7 @@ const WorkspaceSelectorLayout = ({
                     />
                 </CreateWorkspaceContainer>
 
-             
+
             </StyledContainer>
 
             <Modal

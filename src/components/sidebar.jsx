@@ -25,14 +25,21 @@ import {
 } from "@mui/icons-material";
 import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
 import Modal from "@/components/modal";
-import ThemeToggle from "./themeToggle";
 
-const drawerWidth = 280;
+const drawerWidth = 300;
 
 const SidebarContainer = styled(Box)`
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  @media (min-width: 400px) {
+  margin-left: 10px;
+  }
+  
+  @media (min-width: 900px) {
+  margin-left: 100px;
+  }
 `;
 
 const CloseButtonContainer = styled(Box)`
@@ -59,7 +66,7 @@ const StyledTextField = styled(TextField)`
 `;
 
 const NavigationContainer = styled(Box)`
-  flex: 1;
+  width: 100%;
   overflow: auto;
   padding-left: ${({ theme }) => theme.spacing(1)};
   padding-right: ${({ theme }) => theme.spacing(1)};
@@ -100,7 +107,6 @@ const ListItemIconStyled = styled(ListItemIcon)`
 `;
 
 const MobileDrawer = styled(Drawer)`
-  display: block;
 
   @media (min-width: 900px) {
     display: none;
@@ -133,6 +139,15 @@ const ModalContent = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(2)};
   padding-top: ${({ theme }) => theme.spacing(1)};
+`;
+
+const ButtonCreate = styled(Button)`
+  &.Mui-disabled {
+    background-color: #e0e0e0;
+    color: #999;
+    border-color: #ccc;
+    cursor: not-allowed;
+  }
 `;
 
 const Sidebar = ({
@@ -169,19 +184,24 @@ const Sidebar = ({
         title="Crear un nuevo canal"
         actions={
           <>
-            <Button onClick={onCloseModal} color="error">
+            <Button
+              onClick={onCloseModal}
+              variant="outlined"
+              color="error"
+            >
               Cancelar
             </Button>
-            <Button
+            <ButtonCreate
               onClick={onCreateChannel}
-              variant="contained"
+              variant="outlined"
               color="primary"
               disabled={
                 !newChannelName.trim() || !newChannelDescription.trim()
               }
             >
-              Crear
-            </Button>
+              Crear canal
+            </ButtonCreate>
+
           </>
         }
       >
@@ -211,7 +231,6 @@ const Sidebar = ({
         </CloseButtonContainer>
       )}
 
-
       <SidebarContainer>
         <WorkspaceHeader
           title={currentWorkspace?.title || ""}
@@ -240,9 +259,6 @@ const Sidebar = ({
                 ),
               }}
             />
-            {!isMobile && (
-              <ThemeToggle />
-            )}
           </Box>
         </SearchContainer>
 

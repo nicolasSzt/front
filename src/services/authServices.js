@@ -21,6 +21,7 @@ export const loginAuth = async ({ email, password }) => {
       .json();
 
     const token = response.data.authorization_token;
+
     if (token) {
       localStorage.setItem(LOCALSTORAGE_KEYS.AUTHORIZATION_TOKEN, token);
     }

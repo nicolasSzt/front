@@ -147,7 +147,7 @@ const AuthForm = () => {
                         toggleTheme={() => setDarkMode(!darkMode)}
                     />
                 </Box>
-
+                {console.log(uiState.error)}
                 <AuthAlerts
                     successMessage={uiState.successMessage}
                     error={uiState.error}
