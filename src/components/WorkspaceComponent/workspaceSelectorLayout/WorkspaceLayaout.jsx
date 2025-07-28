@@ -2,11 +2,11 @@
 import { styled } from "@mui/material/styles"
 import { CircularProgress, Typography, Box, TextField, Button, Container, Paper } from "@mui/material"
 import ThemeToggle from "../../themeToggle"
-import Modal from "@/components/modal"
 import CreateWorkspaceCard from "../createWorkspaceCard/CreateWorkspaceCard"
 import { WorkspaceCard } from ".."
 import { useTheme } from "@/components/themeProvider"
 import { useNavigate } from "react-router-dom"
+import ModalCreate from "@/components/modal"
 
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -142,51 +142,29 @@ const ThemeToggleContainer = styled(Box)(({ theme }) => ({
 const WorkspaceSelectorLayout = ({
     workspaces,
     isLoading,
-    isError,
-    error,
     selectedWorkspace,
     onSelectWorkspace,
     members,
     dialog,
     workspaceForm,
-    onChangeWorkspaceForm,
+    onChangeWorkspaceTitle,
+    onChangeWorkspaceDescription,
     onSubmitWorkspace,
     titleError,
     texts,
 }) => {
     const { darkMode, toggleTheme, setDarkMode } = useTheme()
     const navigate = useNavigate()
-    const renderWorkspaceCards = () => {
-        if (!workspaces?.length) {
-            return (
-                <Box display="flex" justifyContent="center" width="100%">
-                    <Typography align="center" variant="h6" color="text.secondary">
-                        {texts.noWorkspaces || "No se encontraron workspaces"}
-                    </Typography>
-                </Box>
-            )
+
+    function getMembersCount(workspaceId) {
+        const memberInfo = members.find((m) => m.workspaceId === workspaceId);
+
+        if (!memberInfo) {
+            return
+        } else {
+            return memberInfo.members.length;
         }
 
-        const isOdd = workspaces.length % 2 !== 0
-
-        return workspaces.map((workspace, index) => {
-            const isLast = index === workspaces.length - 1
-            const shouldCenter = isLast && isOdd
-
-            const membersInfo = members.find((m) => m.workspaceId === workspace._id)
-            const membersCount = membersInfo?.members?.length || 0
-
-            return (
-                <WorkspaceWrapper key={workspace._id} className={shouldCenter ? "centered" : ""}>
-                    <WorkspaceCard
-                        workspace={workspace}
-                        membersCount={membersCount}
-                        isSelected={workspace._id === selectedWorkspace}
-                        onSelect={onSelectWorkspace}
-                    />
-                </WorkspaceWrapper>
-            )
-        })
     }
 
     if (isLoading) {
@@ -219,7 +197,35 @@ const WorkspaceSelectorLayout = ({
                     </ThemeToggleContainer>
                 </HeaderContainer>
 
-                <WorkspacesContainer>{renderWorkspaceCards()}</WorkspacesContainer>
+                <WorkspacesContainer>
+                    {workspaces.length > 0 ? (
+                        workspaces.map((workspace) => (
+                            <WorkspaceWrapper key={workspace._id}>
+                                <WorkspaceCard
+                                    workspace={workspace}
+                                    membersCount={getMembersCount(workspace._id)}
+                                    members={members}
+                                    isSelected={workspace._id === selectedWorkspace}
+                                    onSelect={onSelectWorkspace}
+                                />
+                            </WorkspaceWrapper>
+                        ))
+                    ) : (
+                        <Box
+                            display="flex"
+                            justifyContent="center"
+                            width="100%"
+                        >
+                            <Typography
+                                align="center"
+                                variant="h6"
+                                color="text.secondary"
+                            >
+                                {texts.noWorkspaces || "No se encontraron workspaces"}
+                            </Typography>
+                        </Box>
+                    )}
+                </WorkspacesContainer>
 
                 <CreateWorkspaceContainer>
                     <CreateWorkspaceCard
@@ -231,48 +237,16 @@ const WorkspaceSelectorLayout = ({
 
 
             </StyledContainer>
-
-            <Modal
-                open={dialog.open}
-                onClose={dialog.closeDialog}
-                title="Crear nuevo workspace"
-                actions={
-                    <>
-                        <Button onClick={dialog.closeDialog}>Cancelar</Button>
-                        <Button
-                            onClick={onSubmitWorkspace}
-                            variant="contained"
-                            disabled={!workspaceForm.title.trim() || !workspaceForm.description.trim() || !!titleError}
-                        >
-                            Crear
-                        </Button>
-                    </>
-                }
-            >
-                <ModalContent>
-                    <TextField
-                        autoFocus
-                        label="Título del workspace"
-                        name="title"
-                        value={workspaceForm.title}
-                        onChange={onChangeWorkspaceForm}
-                        error={!!titleError}
-                        helperText={titleError || ""}
-                        fullWidth
-                        variant="outlined"
-                    />
-                    <TextField
-                        label="Descripción del workspace"
-                        name="description"
-                        value={workspaceForm.description}
-                        onChange={onChangeWorkspaceForm}
-                        fullWidth
-                        variant="outlined"
-                        multiline
-                        rows={3}
-                    />
-                </ModalContent>
-            </Modal>
+            <ModalCreate
+                channelNameError={titleError}
+                handleChangeWithValidationTitle={onChangeWorkspaceTitle}
+                handleChangeDescription={onChangeWorkspaceDescription}
+                newChannelName={workspaceForm.title}
+                newChannelDescription={workspaceForm.description}
+                openModal={dialog.open}
+                onCloseModal={dialog.closeDialog}
+                onCreateChannel={onSubmitWorkspace}
+            />
         </MainContainer>
     )
 }

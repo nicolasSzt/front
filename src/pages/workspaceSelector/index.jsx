@@ -5,6 +5,7 @@ import WorkspaceSelectorLayout from "@/components/WorkspaceComponent/workspaceSe
 import useMemberInformation from "@/hooks/useMemerInformation";
 import { Navigate } from "react-router-dom";
 import useWorkspaceManager from "@/hooks/useWorkspaceWithChannels";
+import { useNavigate } from "react-router-dom";
 
 const WorkspaceSelector = () => {
     const {
@@ -18,6 +19,8 @@ const WorkspaceSelector = () => {
     } = useWorkspaceManager();
 
     const { membersByWorkspace } = useMemberInformation();
+    
+    const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
     const [titleError, setTitleError] = useState("");
@@ -46,7 +49,7 @@ const WorkspaceSelector = () => {
             try {
                 await handleCreateWorkspace(form_state.title, form_state.description);
                 dialog.closeDialog();
-                Navigate(0)
+                navigate(0)
             } catch (e) {
                 console.error("Error al crear workspace", e);
             }
@@ -55,20 +58,14 @@ const WorkspaceSelector = () => {
 
     const handleChangeWithValidation = (e) => {
         handleChange(e);
+        const value = e.target.value.trim();
 
         if (e.target.name === "title") {
-            const value = e.target.value.trim();
-
-            if (!value) {
-                setTitleError("");
-                return;
-            }
-
-            const exists = workspaces.some((ws) => ws.title === value);
-
-            setTitleError(exists ? "Ya existe un workspace con este título." : "");
+            const workspacesTitleExist = workspaces.some((ws) => ws.title === value);
+            setTitleError(workspacesTitleExist ? "Ya existe un workspace con este título." : "");
         }
     };
+
 
     const handleSubmitWorkspace = (e) => {
         e.preventDefault();
@@ -82,18 +79,18 @@ const WorkspaceSelector = () => {
             workspaces={workspaces}
             members={membersByWorkspace}
             isLoading={isLoading}
-            isError={isError}
-            error={error}
             selectedWorkspace={selectedWorkspace}
             onSelectWorkspace={handleWorkspaceSelect}
             dialog={dialog}
             workspaceForm={form_state}
-            onChangeWorkspaceForm={handleChangeWithValidation}
+            onChangeWorkspaceTitle={handleChangeWithValidation}
+            onChangeWorkspaceDescription={handleChange}
             onSubmitWorkspace={handleSubmitWorkspace}
             titleError={titleError}
             texts={WORKSPACE_SELECTOR_TEXTS}
         />
     );
-};
+
+}
 
 export default WorkspaceSelector;

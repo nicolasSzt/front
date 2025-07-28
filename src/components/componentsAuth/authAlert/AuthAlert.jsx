@@ -8,7 +8,7 @@ const CleanAlert = styled(Alert)(({ theme }) => ({
   alignItems: "center",
   backgroundColor:
     theme.palette.mode === "dark"
-      ? theme.palette.success.dark 
+      ? theme.palette.success.dark
       : undefined,
   color:
     theme.palette.mode === "dark"
@@ -35,7 +35,10 @@ const AuthAlerts = ({ successMessage, error }) => {
           {successMessage}
         </CleanAlert>
       )}
-      {error && <CleanAlert severity="error">{error}</CleanAlert>}
+      {error &&
+        <CleanAlert severity="error">
+          {error}
+        </CleanAlert>}
     </>
   );
 };

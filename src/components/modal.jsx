@@ -1,44 +1,82 @@
-"use client"
-import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Fade } from "@mui/material"
-import { styled } from "@mui/material/styles"
-import { Close } from "@mui/icons-material"
+import Modal from '@mui/material/Modal';
+import { styled } from '@mui/material/styles';
+import { Box, Button, TextField } from '@mui/material';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialog-paper": {
-    borderRadius: theme.spacing(2),
-    minWidth: "400px",
-    maxWidth: "500px",
-  },
-}))
+const ModalContent = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing(2)};
+  padding-top: ${({ theme }) => theme.spacing(1)};
+`;
 
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  paddingBottom: theme.spacing(1),
-}))
+const ButtonCreate = styled(Button)`
+  &.Mui-disabled {
+    background-color: #e0e0e0;
+    color: #999;
+    border-color: #ccc;
+    cursor: not-allowed;
+  }
+`;
 
-const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
-  paddingBottom: theme.spacing(2),
-}))
+const ModalCreate = ({
+  openModal,
+  onCloseModal,
+  onCreateChannel,
+  handleChangeWithValidationTitle,
+  handleChangeDescription,
+  channelNameError,
+  newChannelName,
+  newChannelDescription,
+}) => {
+  const isFormValid = newChannelName.trim() && newChannelDescription.trim();
 
-const Modal = ({ open, onClose, title, children, actions }) => {
   return (
-    <StyledDialog open={open} onClose={onClose} TransitionComponent={Fade} transitionDuration={300}>
-      <StyledDialogTitle>
-        <Typography variant="h6" component="h2">
-          {title}
-        </Typography>
-        <IconButton aria-label="close" onClick={onClose} size="small">
-          <Close />
-        </IconButton>
-      </StyledDialogTitle>
-      <DialogContent>{children}</DialogContent>
-      {actions && <StyledDialogActions>{actions}</StyledDialogActions>}
-    </StyledDialog>
+    <Modal
+      open={openModal}
+      onClose={onCloseModal}
+    >
+      <ModalContent>
+        <TextField
+          label="Nombre del Workspace"
+          name="title"
+          onChange={handleChangeWithValidationTitle}
+          value={newChannelName}
+          fullWidth
+          error={!!channelNameError}
+          helperText={channelNameError || ""}
+        />
+        <TextField
+          label="Descripción"
+          name="description"
+          onChange={handleChangeDescription}
+          value={newChannelDescription}
+          fullWidth
+        />
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          gap={1}
+        >
+          <Button
+            onClick={onCloseModal}
+            variant="outlined"
+            color="error"
+          >
+            Cancelar
+          </Button>
+          <ButtonCreate
+            onClick={onCreateChannel}
+            variant="outlined"
+            color="primary"
+            disabled={!isFormValid}
+          >
+            Crear nuevo Canal
+          </ButtonCreate>
+        </Box>
+      </ModalContent>
+    </Modal>
   )
 }
 
-export default Modal
+export default ModalCreate;
+

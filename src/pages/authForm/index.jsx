@@ -147,7 +147,6 @@ const AuthForm = () => {
                         toggleTheme={() => setDarkMode(!darkMode)}
                     />
                 </Box>
-                {console.log(uiState.error)}
                 <AuthAlerts
                     successMessage={uiState.successMessage}
                     error={uiState.error}
@@ -196,8 +195,6 @@ const AuthForm = () => {
                         variant="outlined"
                         autoComplete="current-password"
                         required
-                        error={passwordMismatch}
-                        helperText={passwordMismatch ? "Las contraseñas no coinciden" : ""}
                     />
 
                     {!uiState.isLogin && (
