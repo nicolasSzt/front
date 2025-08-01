@@ -129,7 +129,11 @@ const AuthForm = () => {
         formState[REGISTER_FIELD_NAME.CONFIRM_PASSWORD];
 
     const toggleAuthMode = (isLogin) => {
-        setUi({ isLogin });
+        setUi({
+            isLogin,
+            error: "",
+            successMessage: "",
+        });
         setFormState({
             [REGISTER_FIELD_NAME.NAME]: "",
             [REGISTER_FIELD_NAME.EMAIL]: "",

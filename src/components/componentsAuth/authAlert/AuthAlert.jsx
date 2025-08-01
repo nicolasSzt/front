@@ -13,21 +13,19 @@ const CleanAlert = styled(Alert)(({ theme }) => ({
   },
 }));
 
-const AuthAlerts = ({ successMessage, error, isLogin }) => {
+const AuthAlerts = ({ successMessage, error }) => {
   return (
     <>
-      {isLogin ?
-        successMessage && (
-          <CleanAlert
-            icon={<CheckCircle />}
-            severity="success">
-            {successMessage}
-          </CleanAlert>
-        ) :
-        error &&
-        <CleanAlert severity="error">
+      {successMessage && (
+        <CleanAlert icon={<CheckCircle />} severity="success">
+          {successMessage}
+        </CleanAlert>
+      )}
+      {error && (
+        <CleanAlert icon={<CheckCircle />} severity="error">
           {error}
-        </CleanAlert>}
+        </CleanAlert>
+      )}
     </>
   );
 };
