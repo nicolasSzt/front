@@ -150,6 +150,7 @@ const AuthForm = () => {
                 <AuthAlerts
                     successMessage={uiState.successMessage}
                     error={uiState.error}
+                    isLogin={uiState.isLogin}
                 />
 
                 <Box

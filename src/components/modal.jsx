@@ -1,22 +1,32 @@
-import Modal from '@mui/material/Modal';
 import { styled } from '@mui/material/styles';
+import Modal from '@mui/material/Modal';
 import { Box, Button, TextField } from '@mui/material';
 
-const ModalContent = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing(2)};
-  padding-top: ${({ theme }) => theme.spacing(1)};
-`;
+const StyledModal = styled(Modal)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
-const ButtonCreate = styled(Button)`
-  &.Mui-disabled {
-    background-color: #e0e0e0;
-    color: #999;
-    border-color: #ccc;
-    cursor: not-allowed;
-  }
-`;
+const ModalContent = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.spacing(2),
+  boxShadow: theme.shadows[5],
+  padding: theme.spacing(4),
+  width: '400px',
+  maxWidth: '500px',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+}));
+
+const ButtonCreate = styled(Button)(({ theme }) => ({
+  '&.Mui-disabled': {
+    backgroundColor: theme.palette.action.disabledBackground,
+    color: theme.palette.action.disabled,
+    cursor: 'not-allowed',
+  },
+}));
 
 const ModalCreate = ({
   openModal,
@@ -31,7 +41,7 @@ const ModalCreate = ({
   const isFormValid = newChannelName.trim() && newChannelDescription.trim();
 
   return (
-    <Modal
+    <StyledModal
       open={openModal}
       onClose={onCloseModal}
     >
@@ -74,7 +84,7 @@ const ModalCreate = ({
           </ButtonCreate>
         </Box>
       </ModalContent>
-    </Modal>
+    </StyledModal>
   )
 }
 

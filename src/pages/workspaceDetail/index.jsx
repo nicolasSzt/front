@@ -20,8 +20,6 @@ import { createChannel } from "@/services/channelService";
 import ThemeToggle from "@/components/themeToggle";
 import SidebarProfile from "@/components/sidebarProfile";
 import useMemberInformation from "@/hooks/useMemerInformation";
-import LOCALSTORAGE_KEYS from "@/constans/localStorage";
-
 
 const MainContainer = styled(Box)`
   display: flex;
