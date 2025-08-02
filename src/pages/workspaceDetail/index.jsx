@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import styled from "@emotion/styled";
-import Sidebar from "@/components/sidebar";
-import Chat from "@/components/chat";
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   CircularProgress,
   Typography,
@@ -13,13 +11,15 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useParams, useNavigate } from "react-router-dom";
-import { useWorkspaceChannels } from "@/hooks/useWorkspaceChannels";
-import useWorkspacesWithChannels from "@/hooks/useWorkspaceWithChannels";
-import { createChannel } from "@/services/channelService";
+import Sidebar from "@/components/sidebar";
+import Chat from "@/components/chat";
 import ThemeToggle from "@/components/themeToggle";
 import SidebarProfile from "@/components/sidebarProfile";
 import useMemberInformation from "@/hooks/useMemerInformation";
+import useWorkspaceChannels from "@/hooks/useWorkspaceChannels";
+import useWorkspacesWithChannels from "@/hooks/useWorkspaceWithChannels";
+import { createChannel } from "@/services/channelService";
+import { styled } from "@mui/material/styles";
 
 const MainContainer = styled(Box)`
   display: flex;
@@ -51,7 +51,7 @@ const MainContent = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   minHeight: "100vh",
   "@media (min-width:900px)": {
-    marginLeft: '200px',
+    marginLeft: "200px",
     marginTop: 0,
   },
 }));
@@ -64,13 +64,6 @@ const LoadingContainer = styled(Box)`
   flex-direction: column;
 `;
 
-const ErrorContainer = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
-
 const SelectTextChannel = styled(Typography)`
   display: flex;
   justify-content: center;
@@ -81,6 +74,7 @@ const SelectTextChannel = styled(Typography)`
 const WorkspaceDetail = () => {
   const { workspace_id } = useParams();
   const navigate = useNavigate();
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [newChannelName, setNewChannelName] = useState("");
@@ -92,20 +86,17 @@ const WorkspaceDetail = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const { workspaces } = useWorkspacesWithChannels();
+  const token = localStorage.getItem("authorization_token");
+  if (!token) {
+    navigate("/login");
+  }
 
-  const currentWorkspace = workspaces.find(
-    (ws) => ws._id === workspace_id
-  );
+  const currentWorkspace = workspaces.find((ws) => ws._id === workspace_id);
 
-  const {
-    channels,
-    selectedChannel,
-    handleChannelSelect,
-    isLoading,
-  } = useWorkspaceChannels(workspace_id);
+  const { channels, selectedChannel, handleChannelSelect, isLoading } =
+    useWorkspaceChannels(workspace_id);
 
   const { membersByWorkspace } = useMemberInformation();
-  
   const userId = membersByWorkspace?.[0]?.userId;
 
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
@@ -118,7 +109,7 @@ const WorkspaceDetail = () => {
     setChannelNameError("");
   };
 
-  const handleChangeWithValidation = (e) => {
+  const handleChangeChannelName = (e) => {
     const value = e.target.value;
     setNewChannelName(value);
 
@@ -127,16 +118,15 @@ const WorkspaceDetail = () => {
       return;
     }
 
-    const channelExist = channels.some(
+    const exists = channels.some(
       (ch) => ch.title.toLowerCase() === value.toLowerCase()
     );
-
-    setChannelNameError(
-      channelExist ? "Ya existe un canal con este nombre." : ""
-    );
+    setChannelNameError(exists ? "Ya existe un canal con este nombre." : "");
   };
 
   const handleCreateChannel = async () => {
+    if (!newChannelName.trim() || channelNameError) return;
+
     try {
       await createChannel(
         newChannelName.trim(),
@@ -159,10 +149,7 @@ const WorkspaceDetail = () => {
         </Typography>
       </LoadingContainer>
     );
-  } else if (localStorage.getItem("authorization_token") === null) {
-    navigate("/login");
   }
-
 
   return (
     <MainContainer>
@@ -198,18 +185,19 @@ const WorkspaceDetail = () => {
         workspace_id={workspace_id}
         mobileOpen={mobileOpen}
         openModal={openModal}
-        onOpenModal={handleOpenModal}
         onCloseModal={handleCloseModal}
         newChannelName={newChannelName}
         newChannelDescription={newChannelDescription}
-        setNewChannelName={setNewChannelName}
         setNewChannelDescription={setNewChannelDescription}
+        setNewChannelName={setNewChannelName}
         channelNameError={channelNameError}
-        handleChangeWithValidation={handleChangeWithValidation}
+        handleChangeWithValidation={handleChangeChannelName}
         searchTerm={channelSearchTerm}
         onSearchChange={setChannelSearchTerm}
+        onOpenModal={handleOpenModal}
         isMobile={isMobile}
       />
+
       <SidebarProfile userId={userId} />
 
       <MainContent>
@@ -230,3 +218,4 @@ const WorkspaceDetail = () => {
 };
 
 export default WorkspaceDetail;
+

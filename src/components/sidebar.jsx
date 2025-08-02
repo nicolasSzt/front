@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import {
   Drawer,
@@ -12,7 +12,6 @@ import {
   Collapse,
   TextField,
   InputAdornment,
-  Button,
 } from "@mui/material";
 import {
   Tag as HashIcon,
@@ -24,7 +23,7 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 import WorkspaceHeader from "@/components/WorkspaceComponent/workspaceHeader/WorkspaceHeader";
-import Modal from "@/components/modal";
+import ModalCreate from "@/components/modal";
 
 const drawerWidth = 300;
 
@@ -34,11 +33,11 @@ const SidebarContainer = styled(Box)`
   flex-direction: column;
 
   @media (min-width: 400px) {
-  margin-left: 10px;
+    margin-left: 10px;
   }
 
   @media (min-width: 900px) {
-  margin-left: 100px;
+    margin-left: 100px;
   }
 `;
 
@@ -107,7 +106,6 @@ const ListItemIconStyled = styled(ListItemIcon)`
 `;
 
 const MobileDrawer = styled(Drawer)`
-
   @media (min-width: 900px) {
     display: none;
   }
@@ -134,7 +132,6 @@ const DesktopDrawer = styled(Drawer)`
   }
 `;
 
-
 const Sidebar = ({
   channels = [],
   selectedChannel = null,
@@ -147,8 +144,8 @@ const Sidebar = ({
   onOpenModal = () => { },
   onCloseModal = () => { },
   newChannelName = "",
-  newChannelDescription = "",
   setNewChannelDescription = () => { },
+  newChannelDescription = "",
   channelNameError = "",
   handleChangeWithValidation = () => { },
   searchTerm = "",
@@ -156,6 +153,10 @@ const Sidebar = ({
   onCreateChannel = () => { },
 }) => {
   const [channelsExpanded, setChannelsExpanded] = useState(true);
+
+  const onDescriptionChange = (e) => {
+    setNewChannelDescription(e.target.value);
+  };
 
   const filteredChannels = channels.filter((channel) =>
     channel.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -169,17 +170,18 @@ const Sidebar = ({
         onClose={onMobileToggle}
         ModalProps={{ keepMounted: true }}
       >
-
         <>
-          <Modal
-            channelNameError={channelNameError}
-            handleChangeWithValidation={handleChangeWithValidation}
-            newChannelDescription={newChannelDescription}
-            setNewChannelDescription={setNewChannelDescription}
-            newChannelName={newChannelName}
+          <ModalCreate
             openModal={openModal}
             onCloseModal={onCloseModal}
-            onCreateChannel={onCreateChannel}
+            onCreate={onCreateChannel}
+            titleError={channelNameError}
+            handleChangeWithValidation={handleChangeWithValidation}
+            onChangeDescription={onDescriptionChange} // <-- Acá pasamos la función correcta
+            labelTitle={"Nombre del canal"}
+            buttonlabel={"Crear nuevo canal"}
+            title={newChannelName}
+            description={newChannelDescription}
           />
 
           {isMobile && (
@@ -197,13 +199,14 @@ const Sidebar = ({
             />
 
             <SearchContainer>
-              <Box sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 2
-              }}>
-
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 2,
+                }}
+              >
                 <StyledTextField
                   fullWidth
                   size="small"
@@ -223,7 +226,9 @@ const Sidebar = ({
 
             <NavigationContainer>
               <List dense>
-                <StyledListItemButton onClick={() => setChannelsExpanded(!channelsExpanded)}>
+                <StyledListItemButton
+                  onClick={() => setChannelsExpanded(!channelsExpanded)}
+                >
                   <ListItemIconStyled>
                     {channelsExpanded ? <ExpandLess /> : <ExpandMore />}
                   </ListItemIconStyled>
@@ -288,15 +293,17 @@ const Sidebar = ({
 
       <DesktopDrawer variant="permanent">
         <>
-          <Modal
-            channelNameError={channelNameError}
-            handleChangeWithValidation={handleChangeWithValidation}
-            newChannelDescription={newChannelDescription}
-            setNewChannelDescription={setNewChannelDescription}
-            newChannelName={newChannelName}
+          <ModalCreate
             openModal={openModal}
             onCloseModal={onCloseModal}
-            onCreateChannel={onCreateChannel}
+            onCreate={onCreateChannel}
+            titleError={channelNameError}
+            handleChangeWithValidation={handleChangeWithValidation}
+            onChangeDescription={onDescriptionChange}
+            labelTitle={"Nombre del canal"}
+            buttonlabel={"Crear nuevo canal"}
+            title={newChannelName}
+            description={newChannelDescription}
           />
 
           {isMobile && (
@@ -314,13 +321,14 @@ const Sidebar = ({
             />
 
             <SearchContainer>
-              <Box sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 2
-              }}>
-
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 2,
+                }}
+              >
                 <StyledTextField
                   fullWidth
                   size="small"
@@ -340,7 +348,9 @@ const Sidebar = ({
 
             <NavigationContainer>
               <List dense>
-                <StyledListItemButton onClick={() => setChannelsExpanded(!channelsExpanded)}>
+                <StyledListItemButton
+                  onClick={() => setChannelsExpanded(!channelsExpanded)}
+                >
                   <ListItemIconStyled>
                     {channelsExpanded ? <ExpandLess /> : <ExpandMore />}
                   </ListItemIconStyled>

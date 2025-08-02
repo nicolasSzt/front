@@ -1,6 +1,6 @@
 "use client"
 import { styled } from "@mui/material/styles"
-import { CircularProgress, Typography, Box, TextField, Button, Container, Paper } from "@mui/material"
+import { CircularProgress, Typography, Box, Container } from "@mui/material"
 import ThemeToggle from "../../themeToggle"
 import CreateWorkspaceCard from "../createWorkspaceCard/CreateWorkspaceCard"
 import { WorkspaceCard } from ".."
@@ -155,8 +155,8 @@ const WorkspaceSelectorLayout = ({
 }) => {
     const { darkMode, toggleTheme, setDarkMode } = useTheme()
     const navigate = useNavigate()
-
-    function getMembersCount(workspaceId) {
+console.log("dialog", dialog)
+    const getMembersCount = (workspaceId) => {
         const memberInfo = members.find((m) => m.workspaceId === workspaceId);
 
         if (!memberInfo) {
@@ -165,6 +165,12 @@ const WorkspaceSelectorLayout = ({
             return memberInfo.members.length;
         }
 
+    }
+
+    const token = localStorage.getItem("authorization_token");
+
+    if (!token) {
+        navigate("/login");
     }
 
     if (isLoading) {
@@ -180,8 +186,6 @@ const WorkspaceSelectorLayout = ({
                 </StyledContainer>
             </MainContainer>
         )
-    } else if (localStorage.getItem("authorization_token") === null) {
-        navigate("/login");
     }
 
     return (
@@ -238,14 +242,16 @@ const WorkspaceSelectorLayout = ({
 
             </StyledContainer>
             <ModalCreate
-                channelNameError={titleError}
-                handleChangeWithValidationTitle={onChangeWorkspaceTitle}
-                handleChangeDescription={onChangeWorkspaceDescription}
-                newChannelName={workspaceForm.title}
-                newChannelDescription={workspaceForm.description}
                 openModal={dialog.open}
                 onCloseModal={dialog.closeDialog}
-                onCreateChannel={onSubmitWorkspace}
+                onCreate={onSubmitWorkspace}
+                onChangeDescription={onChangeWorkspaceDescription}
+                titleError={titleError}
+                handleChangeWithValidation={onChangeWorkspaceTitle}
+                labelTitle="Título del workspace"
+                buttonlabel="Crear nuevo workspace"
+                title={workspaceForm.title}
+                description={workspaceForm.description}
             />
         </MainContainer>
     )

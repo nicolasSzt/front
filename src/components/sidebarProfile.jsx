@@ -8,7 +8,6 @@ import {
   MenuItem,
   Box,
   Typography,
-  Divider,
   ListItemIcon,
 } from "@mui/material"
 import { Person, Settings, AccountCircle, ExitToApp } from "@mui/icons-material"

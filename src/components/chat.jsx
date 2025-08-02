@@ -162,7 +162,12 @@ const Chat = ({ workspaceId, channelId }) => {
         ) : isError ? (
           <Typography color="error">Error: {error.message}</Typography>
         ) : messages.length === 0 ? (
-          <Typography>No hay mensajes en este canal.</Typography>
+          <Box
+            display="flex"
+            justifyContent="center"
+          >
+            <Typography>No hay mensajes en este canal.</Typography>
+          </Box>
         ) : (
           <Paper
             elevation={5}

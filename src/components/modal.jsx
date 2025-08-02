@@ -1,12 +1,15 @@
-import { styled } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import { Box, Button, TextField } from '@mui/material';
+import styled from '@emotion/styled';
 
-const StyledModal = styled(Modal)(({ theme }) => ({
+const StyledModal = styled(Modal)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+`;
 
 const ModalContent = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -31,14 +34,17 @@ const ButtonCreate = styled(Button)(({ theme }) => ({
 const ModalCreate = ({
   openModal,
   onCloseModal,
-  onCreateChannel,
-  handleChangeWithValidationTitle,
-  handleChangeDescription,
-  channelNameError,
-  newChannelName,
-  newChannelDescription,
+  onCreate,
+  titleError,
+  handleChangeWithValidation,
+  onChangeDescription,
+  setDescription,
+  labelTitle,
+  buttonlabel,
+  title,
+  description,
 }) => {
-  const isFormValid = newChannelName.trim() && newChannelDescription.trim();
+  const isFormValid = title.trim() && description.trim();
 
   return (
     <StyledModal
@@ -47,19 +53,19 @@ const ModalCreate = ({
     >
       <ModalContent>
         <TextField
-          label="Nombre del Workspace"
+          label={labelTitle}
           name="title"
-          onChange={handleChangeWithValidationTitle}
-          value={newChannelName}
+          onChange={handleChangeWithValidation}
+          value={title}
           fullWidth
-          error={!!channelNameError}
-          helperText={channelNameError || ""}
+          error={!!titleError}
+          helperText={titleError || ""}
         />
         <TextField
           label="Descripción"
           name="description"
-          onChange={handleChangeDescription}
-          value={newChannelDescription}
+          onChange={onChangeDescription}
+          value={description}
           fullWidth
         />
         <Box
@@ -75,12 +81,12 @@ const ModalCreate = ({
             Cancelar
           </Button>
           <ButtonCreate
-            onClick={onCreateChannel}
+            onClick={onCreate}
             variant="outlined"
             color="primary"
             disabled={!isFormValid}
           >
-            Crear nuevo Canal
+            {buttonlabel}
           </ButtonCreate>
         </Box>
       </ModalContent>
@@ -88,5 +94,4 @@ const ModalCreate = ({
   )
 }
 
-export default ModalCreate;
-
+export default ModalCreate
